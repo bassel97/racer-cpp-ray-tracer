@@ -11,7 +11,8 @@
 #include <math.h>
 #include <algorithm>
 
-#define SMALL_NUMBER    1.e-8
+#include <glm.hpp>
+#define SMALL_NUMBER    1.e-8f
 
 // TODO(Bassel): Seperate files.
 
@@ -31,9 +32,9 @@ struct ScreenRes
 struct SphereData
 {
     std::string name;
-    float posX;    float posY;    float posZ;
-    float sclX;    float sclY;    float sclZ;
-    float r;    float g;    float b;
+    glm::vec3 position;
+    glm::vec3 scale;
+    glm::vec3 color;
     float Ka;    float Kd;    float Ks;    float Kr;
     int n;
 };
@@ -41,41 +42,14 @@ struct SphereData
 struct Light
 {
     std::string name;
-    float posX;    float posY;    float posZ;
-    float Ir;    float Ig;    float Ib;
-};
-
-struct Back
-{
-    float r;
-    float g;
-    float b;
-};
-
-struct Ambient{
-    float Ir;
-    float Ig;
-    float Ib;
-};
-
-// TODO(Bassel): Change these 2 structs to classes and add functionalities.
-
-struct Color{
-    float r;
-    float g;
-    float b;
-};
-
-struct Vector{
-    float x;
-    float y;
-    float z;
+    glm::vec3 position;
+    glm::vec3 color;
 };
 
 struct IntersectionData{
     bool intersected;
-    Vector pointOfIntersection;
-    Vector normalToIntersection;
+    glm::vec3 pointOfIntersection;
+    glm::vec3 normalToIntersection;
 
     double t;
 };
@@ -86,89 +60,57 @@ CameraData cameraData;
 ScreenRes screenRes;
 std::vector<SphereData> sphereDataVector;
 std::vector<Light> lightVector;
-Back back;
-Ambient ambient;
+glm::vec3 back;
+glm::vec3 ambient;
 std::string outputFileName;
 
-void DidIntersect(Vector origin, Vector direction, SphereData sphere, IntersectionData* intersectionData){
+void DidIntersect(glm::vec3 origin, glm::vec3 direction, SphereData sphere, IntersectionData* intersectionData){
 
-    origin.x = ( origin.x - sphere.posX ) / sphere.sclX;
-    origin.y = ( origin.y - sphere.posY ) / sphere.sclY;
-    origin.z = ( origin.z - sphere.posZ ) / sphere.sclZ;
+    origin = (origin - sphere.position) / sphere.scale;
 
     intersectionData->intersected = false;
 
-    double direcMag = 1;//std::sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
-    direction.x /= direcMag;
-    direction.y /= direcMag;
-    direction.z /= direcMag;
+    glm::vec3 scaledDirection = direction / sphere.scale;
 
-    double directionx = ( direction.x ) / sphere.sclX;
-    double directiony = ( direction.y ) / sphere.sclY;
-    double directionz = ( direction.z ) / sphere.sclZ;
+    float A = glm::dot(scaledDirection,scaledDirection);
 
-    double A = directionx * directionx + directiony * directiony + directionz * directionz;
+    float B = - 2 * glm::dot(origin,scaledDirection);
 
-    double B = - 2 * (origin.x * directionx
-    + origin.y * directiony +
-    origin.z * directionz);
+    float C = glm::dot(origin,origin) - 1;
 
-    double C = (origin.x * origin.x
-    + origin.y * origin.y
-    + origin.z * origin.z)
-    - 1;
-
-    double D = B * B - 4 * A * C;
+    float D = B * B - 4 * A * C;
 
     if(D < 0){
         return;
     }
 
-    double tpos = ( -B + sqrt(D) ) / ( 2.0f * A );
-    double tneg = ( -B - sqrt(D) ) / ( 2.0f * A );
+    float tpos = ( -B + sqrt(D) ) / ( 2.0f * A );
+    float tneg = ( -B - sqrt(D) ) / ( 2.0f * A );
 
-    double t = -(0.000001 + std::max(tpos,tneg));
+    float t = -(SMALL_NUMBER + std::max(tpos,tneg));
 
-    Vector point;
-    point.x = origin.x + t * directionx;
-    point.y = origin.y + t * directiony;
-    point.z = origin.z + t * directionz;
+    glm::vec3 point = origin + t * scaledDirection;
 
-    Vector normal;
-    normal.x = (point.x / sphere.sclX );
-    normal.y = (point.y / sphere.sclY );
-    normal.z = (point.z / sphere.sclZ );
-    double normalMag = std::sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
-    normal.x /= normalMag;
-    normal.y /= normalMag;
-    normal.z /= normalMag;
+    glm::vec3 normal = point / sphere.scale;
+    normal = glm::normalize(normal);
 
     intersectionData->intersected = true;
 
     intersectionData->t = t;
 
-    intersectionData->pointOfIntersection.x = ( point.x * sphere.sclX ) + sphere.posX ;
-    intersectionData->pointOfIntersection.y = ( point.y * sphere.sclY ) + sphere.posY ;
-    intersectionData->pointOfIntersection.z = ( point.z * sphere.sclZ ) + sphere.posZ ;
+    intersectionData->pointOfIntersection = ( point * sphere.scale ) + sphere.position ;
     
-    intersectionData->normalToIntersection.x = normal.x ;
-    intersectionData->normalToIntersection.y = normal.y ;
-    intersectionData->normalToIntersection.z = normal.z ;
+    intersectionData->normalToIntersection = normal;
 }
 
-Color getPixelColor(Vector origin, Vector direction, int recursionLevel){
+glm::vec3 getPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLevel){
     
     if(recursionLevel >= 3)
         return {0, 0, 0};
     
-    Color pixelColor;
-    pixelColor.r = 0;
-    pixelColor.g = 0;
-    pixelColor.b = 0;
+    glm::vec3 pixelColor = {0,0,0};
     if(recursionLevel == 0){
-        pixelColor.r = back.r;
-        pixelColor.g = back.g;
-        pixelColor.b = back.b;
+        pixelColor = back;
     }
 
     double tmin = 10000000;
@@ -198,20 +140,11 @@ Color getPixelColor(Vector origin, Vector direction, int recursionLevel){
 
     if(intersected){
 
-        pixelColor.r = nearSphere.Ka * ambient.Ir * nearSphere.r;
-        pixelColor.g = nearSphere.Ka * ambient.Ig * nearSphere.g;
-        pixelColor.b = nearSphere.Ka * ambient.Ib * nearSphere.b;
+        pixelColor = nearSphere.Ka * ambient * nearSphere.color;
 
         for (size_t light_Source = 0; light_Source < lightVector.size(); light_Source++)
         {
-            Vector L;
-            L.x =  lightVector[light_Source].posX - nearIntersectedSphereData.pointOfIntersection.x;
-            L.y =  lightVector[light_Source].posY - nearIntersectedSphereData.pointOfIntersection.y;
-            L.z =  lightVector[light_Source].posZ - nearIntersectedSphereData.pointOfIntersection.z;
-            double LMag = std::sqrt(L.x * L.x + L.y * L.y + L.z * L.z);
-            L.x /= LMag;
-            L.y /= LMag;
-            L.z /= LMag;
+            glm::vec3 L = glm::normalize( lightVector[light_Source].position - nearIntersectedSphereData.pointOfIntersection );
 
             bool shadowed = false;
             for (size_t otherSphere = 0; otherSphere < sphereDataVector.size(); otherSphere++){
@@ -228,48 +161,26 @@ Color getPixelColor(Vector origin, Vector direction, int recursionLevel){
             if(shadowed)
                 continue;
 
-            double NdolL = std::max(0.0f,(nearIntersectedSphereData.normalToIntersection.x * L.x + nearIntersectedSphereData.normalToIntersection.y * L.y + nearIntersectedSphereData.normalToIntersection.z * L.z));
+            float NdolL = std::max(0.0f,(nearIntersectedSphereData.normalToIntersection.x * L.x + nearIntersectedSphereData.normalToIntersection.y * L.y + nearIntersectedSphereData.normalToIntersection.z * L.z));
             
-            pixelColor.r += nearSphere.Kd * lightVector[light_Source].Ir * NdolL * nearSphere.r;
-            pixelColor.g += nearSphere.Kd * lightVector[light_Source].Ig * NdolL * nearSphere.g;
-            pixelColor.b += nearSphere.Kd * lightVector[light_Source].Ib * NdolL * nearSphere.b;
+            pixelColor += nearSphere.Kd * lightVector[light_Source].color * NdolL * nearSphere.color;
 
-            Vector view;
-            view.x = origin.x - nearIntersectedSphereData.pointOfIntersection.x;
-            view.y = origin.y - nearIntersectedSphereData.pointOfIntersection.y;
-            view.z = origin.z - nearIntersectedSphereData.pointOfIntersection.z;
-            double vMag = std::sqrt(view.x * view.x + view.y * view.y + view.z * view.z);
-            view.x /= vMag;
-            view.y /= vMag;
-            view.z /= vMag;
+            glm::vec3 view = glm::normalize(origin - nearIntersectedSphereData.pointOfIntersection);
 
-            Vector r;
-            r.x = 2 * NdolL * nearIntersectedSphereData.normalToIntersection.x - L.x;
-            r.y = 2 * NdolL * nearIntersectedSphereData.normalToIntersection.y - L.y;
-            r.z = 2 * NdolL * nearIntersectedSphereData.normalToIntersection.z - L.z;
+            glm::vec3 r = (2 * NdolL * nearIntersectedSphereData.normalToIntersection - L);
 
             double RdotV = std::max(0.0f,(r.x * view.x + r.y * view.y + r.z * view.z));
-            
-            pixelColor.r += nearSphere.Ks * lightVector[light_Source].Ir * std::pow(RdotV, nearSphere.n);
-            pixelColor.g += nearSphere.Ks * lightVector[light_Source].Ig * std::pow(RdotV, nearSphere.n);
-            pixelColor.b += nearSphere.Ks * lightVector[light_Source].Ib * std::pow(RdotV, nearSphere.n);
 
-            Vector corretedNormal;
-            corretedNormal.x = ( nearIntersectedSphereData.normalToIntersection.x ) * nearSphere.sclX;
-            corretedNormal.y = ( nearIntersectedSphereData.normalToIntersection.y ) * nearSphere.sclY;
-            corretedNormal.z = ( nearIntersectedSphereData.normalToIntersection.z ) * nearSphere.sclZ;
+            pixelColor += lightVector[light_Source].color * nearSphere.Ks * (float)std::pow(RdotV, nearSphere.n);
 
-            Vector corretedPoint;
-            corretedPoint.x = ( nearIntersectedSphereData.pointOfIntersection.x * nearSphere.sclX ) + nearSphere.posX ;
-            corretedPoint.y = ( nearIntersectedSphereData.pointOfIntersection.y * nearSphere.sclX ) + nearSphere.posY ;
-            corretedPoint.z = ( nearIntersectedSphereData.pointOfIntersection.z * nearSphere.sclX ) + nearSphere.posZ ;
+            glm::vec3 corretedNormal = ( nearIntersectedSphereData.normalToIntersection ) * nearSphere.scale;
+
+            glm::vec3 corretedPoint = ( nearIntersectedSphereData.pointOfIntersection * nearSphere.scale ) + nearSphere.position ;
 
             // TODO(Bassel): Correct
-            Color reflectedCalculatedRayColor = getPixelColor(corretedPoint, corretedNormal, recursionLevel+1);
-        
-            pixelColor.r += nearSphere.Kr * reflectedCalculatedRayColor.r;
-            pixelColor.g += nearSphere.Kr * reflectedCalculatedRayColor.g;
-            pixelColor.b += nearSphere.Kr * reflectedCalculatedRayColor.b;
+            glm::vec3 reflectedCalculatedRayColor = getPixelColor(corretedPoint, corretedNormal, recursionLevel+1);
+
+            pixelColor += nearSphere.Kr * reflectedCalculatedRayColor;
         }
     }
 
@@ -321,17 +232,17 @@ int main(int argc, char *argv[]){
             
             sphereData.name = strtok(NULL, " ");
             
-            sphereData.posX = atof(strtok(NULL, " "));
-            sphereData.posY = atof(strtok(NULL, " "));
-            sphereData.posZ = atof(strtok(NULL, " "));
+            sphereData.position.x = atof(strtok(NULL, " "));
+            sphereData.position.y = atof(strtok(NULL, " "));
+            sphereData.position.z = atof(strtok(NULL, " "));
             
-            sphereData.sclX = atof(strtok(NULL, " "));
-            sphereData.sclY = atof(strtok(NULL, " "));
-            sphereData.sclZ = atof(strtok(NULL, " "));
+            sphereData.scale.x = atof(strtok(NULL, " "));
+            sphereData.scale.y = atof(strtok(NULL, " "));
+            sphereData.scale.z = atof(strtok(NULL, " "));
             
-            sphereData.r = atof(strtok(NULL, " "));
-            sphereData.g = atof(strtok(NULL, " "));
-            sphereData.b = atof(strtok(NULL, " "));
+            sphereData.color.r = atof(strtok(NULL, " "));
+            sphereData.color.g = atof(strtok(NULL, " "));
+            sphereData.color.b = atof(strtok(NULL, " "));
 
             sphereData.Ka = atof(strtok(NULL, " "));
             sphereData.Kd = atof(strtok(NULL, " "));
@@ -347,13 +258,13 @@ int main(int argc, char *argv[]){
             
             std::string name = strtok(NULL, " ");
 
-            light.posX = atof(strtok(NULL, " "));
-            light.posY = atof(strtok(NULL, " "));
-            light.posZ = atof(strtok(NULL, " "));
+            light.position.x = atof(strtok(NULL, " "));
+            light.position.y = atof(strtok(NULL, " "));
+            light.position.z = atof(strtok(NULL, " "));
 
-            light.Ir = atof(strtok(NULL, " "));
-            light.Ig = atof(strtok(NULL, " "));
-            light.Ib = atof(strtok(NULL, " "));
+            light.color.r = atof(strtok(NULL, " "));
+            light.color.g = atof(strtok(NULL, " "));
+            light.color.b = atof(strtok(NULL, " "));
 
             lightVector.push_back(light);
         }
@@ -363,9 +274,9 @@ int main(int argc, char *argv[]){
             back.b = atof(strtok(NULL, " "));
         }
         if(word == "AMBIENT") {            
-            ambient.Ir = atof(strtok(NULL, " "));
-            ambient.Ig = atof(strtok(NULL, " "));
-            ambient.Ib = atof(strtok(NULL, " "));
+            ambient.r = atof(strtok(NULL, " "));
+            ambient.g = atof(strtok(NULL, " "));
+            ambient.b = atof(strtok(NULL, " "));
         }
         if(word == "OUTPUT") {    
             outputFileName = strtok(NULL, " ");
@@ -385,8 +296,8 @@ int main(int argc, char *argv[]){
             float v = cameraData.top + ((cameraData.bottom - cameraData.top) / (screenRes.y)) * (float)(i);
             float d = -cameraData.near;
 
-            Vector direction = {u, v, d};
-            Color pixelColor = getPixelColor({0,0,0}, direction, 0);
+            glm::vec3 direction = {u, v, d};
+            glm::vec3 pixelColor = getPixelColor({0,0,0}, direction, 0);
 
 			pixels[i * screenRes.x * 3 + k * 3] = (char)(pixelColor.r * 255);
 			pixels[i * screenRes.x * 3 + k * 3 + 1] = (char)(pixelColor.g * 255);
