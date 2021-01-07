@@ -12,7 +12,9 @@
 #include <algorithm>
 
 #include <glm.hpp>
-#define SMALL_NUMBER    1.e-8f
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+#define SMALL_NUMBER    1.e-4f
 
 // TODO(Bassel): Seperate files.
 
@@ -122,11 +124,11 @@ glm::vec3 getPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLeve
     {
         IntersectionData intersectionData;
 
-        DidIntersect(origin, direction, sphereDataVector[sphere], &intersectionData);
+        DidIntersect(origin, direction, sphereDataVector[sphere], &intersectionData);  
 
         if(intersectionData.intersected)
         {
-            if(intersectionData.t < tmin && intersectionData.t > 1){
+            if(intersectionData.t < tmin && intersectionData.t > 0){
                 intersected = true;
                 tmin = intersectionData.t;
 
@@ -172,16 +174,16 @@ glm::vec3 getPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLeve
             double RdotV = std::max(0.0f,(r.x * view.x + r.y * view.y + r.z * view.z));
 
             pixelColor += lightVector[light_Source].color * nearSphere.Ks * (float)std::pow(RdotV, nearSphere.n);
-
-            glm::vec3 corretedNormal = ( nearIntersectedSphereData.normalToIntersection ) * nearSphere.scale;
-
-            glm::vec3 corretedPoint = ( nearIntersectedSphereData.pointOfIntersection * nearSphere.scale ) + nearSphere.position ;
-
-            // TODO(Bassel): Correct
-            glm::vec3 reflectedCalculatedRayColor = getPixelColor(corretedPoint, corretedNormal, recursionLevel+1);
-
-            pixelColor += nearSphere.Kr * reflectedCalculatedRayColor;
         }
+        
+        
+
+        glm::vec3 view = glm::normalize(origin - nearIntersectedSphereData.pointOfIntersection);
+        glm::vec3 reflectedRay = -view - 2.0f * nearIntersectedSphereData.normalToIntersection * glm::dot(-view, nearIntersectedSphereData.normalToIntersection);
+        glm::vec3 reflectedCalculatedRayColor = getPixelColor(nearIntersectedSphereData.pointOfIntersection, reflectedRay, recursionLevel+1);
+
+        pixelColor += nearSphere.Kr * reflectedCalculatedRayColor;
+
     }
 
     pixelColor.r = std::min(1.0f, std::max(0.0f, pixelColor.r));
@@ -191,8 +193,6 @@ glm::vec3 getPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLeve
 }
 
 int main(int argc, char *argv[]){
-
-    std::cout << "Test";
 
     std::string fileName = argv[1];
 
