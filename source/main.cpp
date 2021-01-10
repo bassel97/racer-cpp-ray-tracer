@@ -16,6 +16,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #define SMALL_NUMBER    1.e-4f
 
+#include <utilities/graphics/intersection-data.hpp>
+#include <shapes/sphere-shape.hpp>
+#include <ray.hpp>
+
 // TODO(Bassel): Seperate files.
 
 
@@ -31,16 +35,6 @@ struct ScreenRes
     int x;    int y;
 };
 
-struct SphereData
-{
-    std::string name;
-    glm::vec3 position;
-    glm::vec3 scale;
-    glm::vec3 color;
-    float Ka;    float Kd;    float Ks;    float Kr;
-    int n;
-};
-
 struct Light
 {
     std::string name;
@@ -48,62 +42,15 @@ struct Light
     glm::vec3 color;
 };
 
-struct IntersectionData{
-    bool intersected;
-    glm::vec3 pointOfIntersection;
-    glm::vec3 normalToIntersection;
-
-    double t;
-};
-
 void save_image(int Width, int Height, char* fname, unsigned char* pixels);
 
 CameraData cameraData;
 ScreenRes screenRes;
-std::vector<SphereData> sphereDataVector;
+std::vector<racer::Sphere> sphereDataVector;
 std::vector<Light> lightVector;
 glm::vec3 back;
 glm::vec3 ambient;
 std::string outputFileName;
-
-void DidIntersect(glm::vec3 origin, glm::vec3 direction, SphereData sphere, IntersectionData* intersectionData){
-
-    origin = (origin - sphere.position) / sphere.scale;
-
-    intersectionData->intersected = false;
-
-    glm::vec3 scaledDirection = direction / sphere.scale;
-
-    float A = glm::dot(scaledDirection,scaledDirection);
-
-    float B = - 2 * glm::dot(origin,scaledDirection);
-
-    float C = glm::dot(origin,origin) - 1;
-
-    float D = B * B - 4 * A * C;
-
-    if(D < 0){
-        return;
-    }
-
-    float tpos = ( -B + sqrt(D) ) / ( 2.0f * A );
-    float tneg = ( -B - sqrt(D) ) / ( 2.0f * A );
-
-    float t = -(SMALL_NUMBER + std::max(tpos,tneg));
-
-    glm::vec3 point = origin + t * scaledDirection;
-
-    glm::vec3 normal = point / sphere.scale;
-    normal = glm::normalize(normal);
-
-    intersectionData->intersected = true;
-
-    intersectionData->t = t;
-
-    intersectionData->pointOfIntersection = ( point * sphere.scale ) + sphere.position ;
-    
-    intersectionData->normalToIntersection = normal;
-}
 
 glm::vec3 getPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLevel){
     
@@ -117,14 +64,12 @@ glm::vec3 getPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLeve
 
     double tmin = 10000000;
     bool intersected = false;
-    IntersectionData nearIntersectedSphereData;
-    SphereData nearSphere;
+    racer::IntersectionData nearIntersectedSphereData;
+    racer::Sphere nearSphere;
 
     for (size_t sphere = 0; sphere < sphereDataVector.size(); sphere++)
     {
-        IntersectionData intersectionData;
-
-        DidIntersect(origin, direction, sphereDataVector[sphere], &intersectionData);  
+        racer::IntersectionData intersectionData = sphereDataVector[sphere].DidIntersectWithRay(racer::Ray(origin, direction));  
 
         if(intersectionData.intersected)
         {
@@ -151,13 +96,14 @@ glm::vec3 getPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLeve
             bool shadowed = false;
             for (size_t otherSphere = 0; otherSphere < sphereDataVector.size(); otherSphere++){
                 if(sphereDataVector[otherSphere].name != nearSphere.name){
-                    IntersectionData shadowIntersection;
-                    DidIntersect(nearIntersectedSphereData.pointOfIntersection, L, sphereDataVector[otherSphere], &shadowIntersection);
+
+                    racer::IntersectionData shadowIntersection = sphereDataVector[otherSphere].DidIntersectWithRay(racer::Ray(nearIntersectedSphereData.pointOfIntersection, L)); 
                     
                     if(shadowIntersection.intersected && shadowIntersection.t > 1){
                         shadowed = true;
                         break;
                     }
+
                 }                    
             }
             if(shadowed)
@@ -174,10 +120,9 @@ glm::vec3 getPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLeve
             double RdotV = std::max(0.0f,(r.x * view.x + r.y * view.y + r.z * view.z));
 
             pixelColor += lightVector[light_Source].color * nearSphere.Ks * (float)std::pow(RdotV, nearSphere.n);
+            
         }
         
-        
-
         glm::vec3 view = glm::normalize(origin - nearIntersectedSphereData.pointOfIntersection);
         glm::vec3 reflectedRay = -view - 2.0f * nearIntersectedSphereData.normalToIntersection * glm::dot(-view, nearIntersectedSphereData.normalToIntersection);
         glm::vec3 reflectedCalculatedRayColor = getPixelColor(nearIntersectedSphereData.pointOfIntersection, reflectedRay, recursionLevel+1);
@@ -228,7 +173,7 @@ int main(int argc, char *argv[]){
             screenRes.y = atoi(strtok(NULL, " "));
         }
         if(word == "SPHERE") {
-            SphereData sphereData;
+            racer::Sphere sphereData;
             
             sphereData.name = strtok(NULL, " ");
             

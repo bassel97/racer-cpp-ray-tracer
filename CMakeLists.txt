@@ -5,6 +5,7 @@ project(RACER VERSION 0.1.0)
 
 # Define the directories in which to search for the included headers
 include_directories(
+    source/common
     vendor/glm/
 )
 
