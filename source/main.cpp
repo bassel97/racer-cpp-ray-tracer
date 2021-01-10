@@ -11,9 +11,9 @@
 #include <math.h>
 #include <algorithm>
 
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #define SMALL_NUMBER    1.e-4f
 
 // TODO(Bassel): Seperate files.
