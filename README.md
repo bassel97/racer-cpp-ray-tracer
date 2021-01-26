@@ -9,7 +9,8 @@ Currently optimizing this project and adding real time features.
 
 ### TODO list and improvements:
 - [x] Correct reflection.
-- [ ] Seperate files and create application structue.
+- [x] Seperate files and create application structue.
+- [ ] More seperation files and create application structue.
 - [ ] Add more complex shapes.
 - [ ] Implement OBJ importing with materials.
 - [ ] Replace the input file to be in a JSON formula.

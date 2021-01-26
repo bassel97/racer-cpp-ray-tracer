@@ -1,5 +1,5 @@
 #pragma once
-#include <ray.hpp>
+#include <physics/ray.hpp>
 #include <utilities/graphics/intersection-data.hpp>
 #include <shapes/shape.hpp>
 #include <algorithm>

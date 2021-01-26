@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <ray.hpp>
+#include <physics/ray.hpp>
 #include <utilities/graphics/intersection-data.hpp>
 
 #define SMALL_NUMBER    1.e-4f
