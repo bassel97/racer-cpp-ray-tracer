@@ -7,6 +7,6 @@
 
 int main(int argc, char *argv[]){
 
-    return racer::Application(argv[1]).Run();
+    return racer::Application().Run();
 
 }
