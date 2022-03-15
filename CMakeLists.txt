@@ -27,6 +27,7 @@ include_directories(
     vendor/glad/include
     vendor/imgui
     vendor/utils
+    vendor/JSON
 )
 
 # Source files of GLAD

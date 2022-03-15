@@ -28,6 +28,13 @@
 #include <render/camera.hpp>
 #include <render/light.hpp>
 
+#include <json.hpp>
+
+#include <ecs/scene.hpp>
+#include <ecs/entity.hpp>
+
+#include <fstream>
+
 namespace racer {
 
     class Application{
@@ -230,7 +237,26 @@ namespace racer {
         }
 
         int Run(){
+
+            Scene world;
+            Entity e("test");
             
+            world.AddEntity(&e);
+            std::cout << "world.GetEntitiesCount() : " << world.GetEntitiesCount() << std::endl; 
+
+            std::ifstream istream("file.json");
+            nlohmann::json j;
+            istream >> j;
+
+            std::cout<< j["object"]["currency"];
+
+            //Populate Scene
+            
+            //Populate Scene
+
+            if(true)
+                return 0;
+
             // TODO(Bassel): Copy to populate Function
             FILE *file = fopen(fileName.c_str(),"r");
             if (!file) {

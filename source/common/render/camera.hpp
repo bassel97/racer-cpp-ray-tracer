@@ -9,8 +9,8 @@ namespace racer
         private:
 
         public:
-        float nearPLane;
-        float farPLane;    
+        float nearPlane;
+        float farPlane;    
         float left;
         float right;
         float bottom;
