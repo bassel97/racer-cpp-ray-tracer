@@ -31,7 +31,6 @@
 #include <json.hpp>
 
 #include <ecs/scene.hpp>
-#include <ecs/entity.hpp>
 
 #include <fstream>
 
@@ -101,12 +100,11 @@ namespace racer {
                         nearSphere = sphereDataVector[sphere];
                     }
                 }
-
             }
 
             if(intersected){
 
-                pixelColor = nearSphere.Ka * ambient * nearSphere.color;
+                pixelColor = nearSphere.renderingMaterial.Ka * ambient * nearSphere.renderingMaterial.color;
 
                 for (size_t light_Source = 0; light_Source < lightVector.size(); light_Source++)
                 {
@@ -114,7 +112,7 @@ namespace racer {
 
                     bool shadowed = false;
                     for (size_t otherSphere = 0; otherSphere < sphereDataVector.size(); otherSphere++){
-                        if(sphereDataVector[otherSphere].name != nearSphere.name){
+                        if(sphereDataVector[otherSphere].holdingEntity->GetName() != nearSphere.holdingEntity->GetName()){
 
                             racer::IntersectionData shadowIntersection = sphereDataVector[otherSphere].DidIntersectWithRay(racer::Ray(nearIntersectedSphereData.pointOfIntersection, L)); 
                             
@@ -130,7 +128,7 @@ namespace racer {
 
                     float NdolL = std::max(0.0f,(nearIntersectedSphereData.normalToIntersection.x * L.x + nearIntersectedSphereData.normalToIntersection.y * L.y + nearIntersectedSphereData.normalToIntersection.z * L.z));
                     
-                    pixelColor += nearSphere.Kd * lightVector[light_Source].color * NdolL * nearSphere.color;
+                    pixelColor += nearSphere.renderingMaterial.Kd * lightVector[light_Source].color * NdolL * nearSphere.renderingMaterial.color;
 
                     glm::vec3 view = glm::normalize(origin - nearIntersectedSphereData.pointOfIntersection);
 
@@ -138,7 +136,7 @@ namespace racer {
 
                     double RdotV = std::max(0.0f,(r.x * view.x + r.y * view.y + r.z * view.z));
 
-                    pixelColor += lightVector[light_Source].color * nearSphere.Ks * (float)std::pow(RdotV, nearSphere.n);
+                    pixelColor += lightVector[light_Source].color * nearSphere.renderingMaterial.Ks * (float)std::pow(RdotV, nearSphere.renderingMaterial.n);
                     
                 }
                 
@@ -146,7 +144,7 @@ namespace racer {
                 glm::vec3 reflectedRay = -view - 2.0f * nearIntersectedSphereData.normalToIntersection * glm::dot(-view, nearIntersectedSphereData.normalToIntersection);
                 glm::vec3 reflectedCalculatedRayColor = getPixelColor(nearIntersectedSphereData.pointOfIntersection, reflectedRay, recursionLevel+1);
 
-                pixelColor += nearSphere.Kr * reflectedCalculatedRayColor;
+                pixelColor += nearSphere.renderingMaterial.Kr * reflectedCalculatedRayColor;
 
             }
 
@@ -196,6 +194,9 @@ namespace racer {
         Application(/*std::string _fileName*/){
             //fileName = _fileName;
 
+            if (true)
+                return;
+
             // Initialize GLFW and exit if it failed
             if(!glfwInit()){
                 std::cerr << "Failed to Initialize GLFW" << std::endl;
@@ -238,27 +239,22 @@ namespace racer {
 
         int Run(){
 
-            Scene world;
             Entity e("test");
-            
-            world.AddEntity(&e);
-            std::cout << "world.GetEntitiesCount() : " << world.GetEntitiesCount() << std::endl; 
+            //std::cout << "world.GetEntitiesCount() : " << world.GetEntitiesCount() << std::endl; 
 
             std::ifstream istream("file.json");
             nlohmann::json j;
             istream >> j;
 
-            std::cout<< j["object"]["currency"];
-
             //Populate Scene
-            
+            std::vector<Scene*> scenes = Scene::PopulateScenes(j["scenes"]);
             //Populate Scene
 
             if(true)
                 return 0;
 
             // TODO(Bassel): Copy to populate Function
-            FILE *file = fopen(fileName.c_str(),"r");
+            /*FILE *file = fopen(fileName.c_str(),"r");
             if (!file) {
                 printf("Unable to open file '%s'\n", fileName.c_str());
                 return -1;
@@ -270,7 +266,7 @@ namespace racer {
                 std::string word = std::string(strtok(buffer, " "));
 
                 if(word == "NEAR") {
-                    camera.nearPLane = atof(strtok(NULL, " "));
+                    camera.nearPlane = atof(strtok(NULL, " "));
                 }
                 if(word == "LEFT") {
                     camera.left = atof(strtok(NULL, " "));
@@ -344,7 +340,7 @@ namespace racer {
                 }
             }   
             
-            fclose(file);
+            fclose(file);*/
 
             unsigned char *pixels; 
             pixels = new unsigned char [3 * screen.width * screen.height];
@@ -355,7 +351,7 @@ namespace racer {
                     
                     float u = camera.left + ((camera.right - camera.left) / (screen.width)) * (float)(k);
                     float v = camera.top + ((camera.bottom - camera.top) / (screen.height)) * (float)(i);
-                    float d = -camera.nearPLane;
+                    float d = -camera.nearPlane;
 
                     glm::vec3 direction = {u, v, d};
                     glm::vec3 pixelColor = getPixelColor({0,0,0}, direction, 0);
