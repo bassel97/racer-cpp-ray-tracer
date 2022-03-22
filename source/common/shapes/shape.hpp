@@ -14,6 +14,7 @@ namespace racer {
     class Shape : public Component {
 
         public:
+
         //std::string name;
 
         // Transform data

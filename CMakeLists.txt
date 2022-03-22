@@ -20,6 +20,11 @@ set(IMGUI_SOURCES
         vendor/imgui/imgui_impl/imgui_impl_opengl3.cpp
         )
 
+# A variables with all the source files of Dear ImGui
+set(RACER_SOURCES
+        source/common/shapes/sphere/sphere-shape.cpp
+        )
+
 include_directories(
     source/common
     vendor/glm/
@@ -37,5 +42,5 @@ set(GLAD_SOURCE vendor/glad/src/gl.c)
 set(VENDOR_SOURCES ${GLAD_SOURCE} ${IMGUI_SOURCES})
 
 # add the executable
-add_executable(RACER source/main.cpp ${VENDOR_SOURCES})
+add_executable(RACER source/main.cpp ${VENDOR_SOURCES} ${RACER_SOURCES})
 target_link_libraries(RACER glfw)

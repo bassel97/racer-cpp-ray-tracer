@@ -8,7 +8,11 @@
 
 #include <ecs/component.hpp>
 #include <ecs/components/transform.hpp>
+
 #include <render/camera.hpp>
+#include <render/light.hpp>
+
+#include <shapes/sphere/sphere-shape.hpp>
 
 namespace racer
 {
@@ -30,6 +34,7 @@ namespace racer
         void AddComponent(Component* component)
         {
             components.insert(component);
+            component->holdingEntity = this;
         }
 
         void RemoveComponent(Component* component)
@@ -40,6 +45,20 @@ namespace racer
         std::string GetName() const
         {
             return name;
+        }
+
+        template <class T>
+        T* GetComponent()
+        {
+            for (Component* component : components) {
+                T* childComponent = dynamic_cast<T*>(component);
+                if ( childComponent != NULL )
+                {
+                    std::cout << "Test\n";
+                    return childComponent;
+                }
+            }
+            return NULL;
         }
 
         static std::vector<Entity*> PopulateEntities (nlohmann::json entities)
@@ -64,14 +83,20 @@ namespace racer
                     }
                     if(componentData.key()._Equal("camera"))
                     {
-                        Camera* transformComponent = new Camera (componentData.value());
-                        entity->AddComponent(transformComponent);
+                        Camera* cameraComponent = new Camera (componentData.value());
+                        entity->AddComponent(cameraComponent);
                         continue;
                     }
                     if(componentData.key()._Equal("light"))
                     {
-                        Camera* transformComponent = new Camera (componentData.value());
-                        entity->AddComponent(transformComponent);
+                        Light* lightComponent = new Light (componentData.value());
+                        entity->AddComponent(lightComponent);
+                        continue;
+                    }
+                    if(componentData.key()._Equal("sphere-renderer"))
+                    {
+                        Sphere* sphereComponent = new Sphere (componentData.value());
+                        entity->AddComponent(sphereComponent);
                         continue;
                     }
 

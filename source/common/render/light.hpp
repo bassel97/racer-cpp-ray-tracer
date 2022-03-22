@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 
 #include <json.hpp>
@@ -12,7 +14,7 @@ namespace racer
     {
         public:
         glm::vec3 color;
-        glm::vec3 position;
+        //glm::vec3 position;
 
         Light()
         {

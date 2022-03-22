@@ -12,9 +12,10 @@ namespace racer
 {
     class Scene{
 
+        public:
+        std::string name;
         std::set<Entity*> entities;
 
-        public:
         void AddEntity (Entity* entity)
         {
             entities.insert(entity);
@@ -33,11 +34,17 @@ namespace racer
         static std::vector<Scene*> PopulateScenes (nlohmann::json scenes)
         {
             std::vector<Scene*> scenesVector;
-            for (auto& scene : scenes.items()) {
+            for (auto& sceneData : scenes.items()) {
+                Scene* scene = new Scene();
+                scene->name = sceneData.key();
                 //std::cout << scene.key() << " : " << scene.value() << "\n";
-                std::cout << scene.key() << ":\n";
-                std::vector<Entity*> entitiesVector = Entity::PopulateEntities(scene.value()["entities"]);
+                std::cout << sceneData.key() << ":\n";
+                std::vector<Entity*> entitiesVector = Entity::PopulateEntities(sceneData.value()["entities"]);
 
+                for (auto& entity : entitiesVector) {
+                    scene->AddEntity (entity);
+                }
+                scenesVector.push_back(scene);
             }
             return scenesVector;
         }

@@ -21,7 +21,7 @@
 
 #include <utilities/window/screen.hpp>
 #include <utilities/graphics/intersection-data.hpp>
-#include <shapes/sphere-shape.hpp>
+#include <shapes/sphere/sphere-shape.hpp>
 
 #include <physics/ray.hpp>
 
@@ -46,7 +46,7 @@ namespace racer {
         std::vector<Light> lightVector;
         glm::vec3 back;
         glm::vec3 ambient;
-        std::string outputFileName;
+        std::string outputFileName = "test.ppm";
 
         GLFWwindow* window = nullptr; 
 
@@ -108,11 +108,11 @@ namespace racer {
 
                 for (size_t light_Source = 0; light_Source < lightVector.size(); light_Source++)
                 {
-                    glm::vec3 L = glm::normalize( lightVector[light_Source].position - nearIntersectedSphereData.pointOfIntersection );
+                    glm::vec3 L = glm::normalize( lightVector[light_Source].holdingEntity->transform->position - nearIntersectedSphereData.pointOfIntersection );
 
                     bool shadowed = false;
                     for (size_t otherSphere = 0; otherSphere < sphereDataVector.size(); otherSphere++){
-                        if(sphereDataVector[otherSphere].holdingEntity->GetName() != nearSphere.holdingEntity->GetName()){
+                        if(! sphereDataVector[otherSphere].holdingEntity->GetName()._Equal( nearSphere.holdingEntity->GetName()) ){
 
                             racer::IntersectionData shadowIntersection = sphereDataVector[otherSphere].DidIntersectWithRay(racer::Ray(nearIntersectedSphereData.pointOfIntersection, L)); 
                             
@@ -239,108 +239,48 @@ namespace racer {
 
         int Run(){
 
-            Entity e("test");
-            //std::cout << "world.GetEntitiesCount() : " << world.GetEntitiesCount() << std::endl; 
-
-            std::ifstream istream("file.json");
+            std::ifstream istream("E:/Bassel/Racer/racer-cpp-ray-tracer/build/Debug/file.json");
             nlohmann::json j;
             istream >> j;
+
+            screen.width = screen.height = 600;
 
             //Populate Scene
             std::vector<Scene*> scenes = Scene::PopulateScenes(j["scenes"]);
             //Populate Scene
 
-            if(true)
-                return 0;
-
-            // TODO(Bassel): Copy to populate Function
-            /*FILE *file = fopen(fileName.c_str(),"r");
-            if (!file) {
-                printf("Unable to open file '%s'\n", fileName.c_str());
-                return -1;
+            std::set<Entity*> entities = scenes[0]->entities;
+            for (std::set<Entity*>::iterator itr = entities.begin(); itr != entities.end(); itr++) 
+            {
+               Camera* cameraComponent = (*itr)->GetComponent<Camera>();
+               if (cameraComponent != NULL)
+                    camera = *cameraComponent;
+            }
+            for (std::set<Entity*>::iterator itr = entities.begin(); itr != entities.end(); itr++) 
+            {
+                std::cout << (*itr)->GetName() << "\n";
+               Sphere* sphereComponent = (*itr)->GetComponent<Sphere>();
+               if (sphereComponent != NULL)
+                    sphereDataVector.push_back(*sphereComponent);
+            }
+            for (std::set<Entity*>::iterator itr = entities.begin(); itr != entities.end(); itr++) 
+            {
+               Light* lightComponent = (*itr)->GetComponent<Light>();
+               if (lightComponent != NULL)
+                    lightVector.push_back(*lightComponent);
             }
 
-            char buffer[512];
-            while(fgets(buffer, sizeof(buffer), file)) {
-            
-                std::string word = std::string(strtok(buffer, " "));
+            back.r = 1.0f;
+            back.g = 1.0f;
+            back.b = 1.0f;
 
-                if(word == "NEAR") {
-                    camera.nearPlane = atof(strtok(NULL, " "));
-                }
-                if(word == "LEFT") {
-                    camera.left = atof(strtok(NULL, " "));
-                }
-                if(word == "RIGHT") {
-                    camera.right = atof(strtok(NULL, " "));
-                }
-                if(word == "BOTTOM") {
-                    camera.bottom = atof(strtok(NULL, " "));
-                }
-                if(word == "TOP") {
-                    camera.top = atof(strtok(NULL, " "));
-                }
-                if(word == "RES") {
-                    screen.width = atoi(strtok(NULL, " "));
-                    screen.height = atoi(strtok(NULL, " "));
-                }
-                if(word == "SPHERE") {
-                    racer::Sphere sphereData;
-                    
-                    sphereData.name = strtok(NULL, " ");
-                    
-                    sphereData.position.x = atof(strtok(NULL, " "));
-                    sphereData.position.y = atof(strtok(NULL, " "));
-                    sphereData.position.z = atof(strtok(NULL, " "));
-                    
-                    sphereData.scale.x = atof(strtok(NULL, " "));
-                    sphereData.scale.y = atof(strtok(NULL, " "));
-                    sphereData.scale.z = atof(strtok(NULL, " "));
-                    
-                    sphereData.color.r = atof(strtok(NULL, " "));
-                    sphereData.color.g = atof(strtok(NULL, " "));
-                    sphereData.color.b = atof(strtok(NULL, " "));
+            ambient.r = 0.2f;
+            ambient.g = 0.2f;
+            ambient.b = 0.2f;
 
-                    sphereData.Ka = atof(strtok(NULL, " "));
-                    sphereData.Kd = atof(strtok(NULL, " "));
-                    sphereData.Ks = atof(strtok(NULL, " "));
-                    sphereData.Kr = atof(strtok(NULL, " "));
-                    
-                    sphereData.n = atoi(strtok(NULL, " "));
 
-                    sphereDataVector.push_back(sphereData);
-                }
-                if(word == "LIGHT") {
-                    Light light;
-                    
-                    std::string name = strtok(NULL, " ");
-
-                    light.position.x = atof(strtok(NULL, " "));
-                    light.position.y = atof(strtok(NULL, " "));
-                    light.position.z = atof(strtok(NULL, " "));
-
-                    light.color.r = atof(strtok(NULL, " "));
-                    light.color.g = atof(strtok(NULL, " "));
-                    light.color.b = atof(strtok(NULL, " "));
-
-                    lightVector.push_back(light);
-                }
-                if(word == "BACK") {            
-                    back.r = atof(strtok(NULL, " "));
-                    back.g = atof(strtok(NULL, " "));
-                    back.b = atof(strtok(NULL, " "));
-                }
-                if(word == "AMBIENT") {            
-                    ambient.r = atof(strtok(NULL, " "));
-                    ambient.g = atof(strtok(NULL, " "));
-                    ambient.b = atof(strtok(NULL, " "));
-                }
-                if(word == "OUTPUT") {    
-                    outputFileName = strtok(NULL, " ");
-                }
-            }   
-            
-            fclose(file);*/
+            /*if(true)
+                return 0;*/
 
             unsigned char *pixels; 
             pixels = new unsigned char [3 * screen.width * screen.height];

@@ -1,10 +1,11 @@
 #pragma once
 #include <physics/ray.hpp>
 #include <utilities/graphics/intersection-data.hpp>
-#include <shapes/shape.hpp>
 #include <algorithm>
 
-#include <ecs/entity.hpp>
+#include <json.hpp>
+
+#include <shapes/shape.hpp>
 
 namespace racer {
 
@@ -13,7 +14,26 @@ namespace racer {
         
         public:
 
-            IntersectionData DidIntersectWithRay(Ray ray) {
+            Sphere(){}
+
+            Sphere(nlohmann::json shapeData)
+            {
+                //TO-DO duplicate code to helper functions
+                auto materialData = shapeData["material"];
+                renderingMaterial.color.r = materialData["color"]["r"];
+                renderingMaterial.color.g = materialData["color"]["g"];
+                renderingMaterial.color.b = materialData["color"]["b"];
+
+                renderingMaterial.Ka = materialData["k"]["ka"];
+                renderingMaterial.Kd = materialData["k"]["kd"];
+                renderingMaterial.Kr = materialData["k"]["kr"];
+                renderingMaterial.Ks = materialData["k"]["ks"];
+
+                renderingMaterial.n = materialData["n"];
+            }
+
+            IntersectionData DidIntersectWithRay(Ray ray);
+            /*{
 
                 ray.origin = (ray.origin - holdingEntity->transform->position) / holdingEntity->transform->scale;
 
@@ -48,7 +68,7 @@ namespace racer {
 
                 return IntersectionData(true, pointOfIntersection, normalToIntersection, t);
                 
-            }
+            }*/
 
     };
 

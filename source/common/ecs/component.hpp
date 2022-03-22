@@ -18,5 +18,10 @@ namespace racer
         {
 
         }*/
+
+        virtual std::string GetName()
+        {
+            return name;
+        }
     };
 } // namespace racer
