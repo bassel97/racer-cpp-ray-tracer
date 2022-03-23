@@ -4,7 +4,7 @@
 #include <utilities/graphics/intersection-data.hpp>
 
 #include <ecs/component.hpp>
-#include <render/material.hpp>
+#include <render/structs/material.hpp>
 
 #define SMALL_NUMBER    1.e-4f
 
