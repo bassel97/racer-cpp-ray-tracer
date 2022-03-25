@@ -33,6 +33,7 @@ include_directories(
     vendor/imgui
     vendor/utils
     vendor/JSON
+    vendor/stb
 )
 
 # Source files of GLAD

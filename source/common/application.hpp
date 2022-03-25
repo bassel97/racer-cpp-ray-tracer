@@ -10,35 +10,16 @@
 
 #include <ecs/scene.hpp>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
 namespace racer {
 
     class Application{
         std::string fileName;
-        std::string outputFileName = "Result.ppm"; 
-
-        void save_image(int Width, int Height, char* fname, unsigned char* pixels) {
-            FILE *fp;
-            const int maxVal=255; 
-            
-            printf("Saving image %s: %d x %d\n", fname,Width,Height);
-            fp = fopen(fname,"wb");
-            if (!fp) {
-                    printf("Unable to open file '%s'\n",fname);
-                    return;
-            }
-            fprintf(fp, "P6\n");
-            fprintf(fp, "%d %d\n", Width, Height);
-            fprintf(fp, "%d\n", maxVal);
-
-            for(int j = 0; j < Height; j++) {
-                    fwrite(&pixels[j*Width*3], 3,Width,fp);
-            }
-
-            fclose(fp);
-        }
+        std::string outputFileName = "Result.png"; 
 
         public:
-
         Application(){}
 
         int Run(){
@@ -50,12 +31,12 @@ namespace racer {
             
             unsigned char *pixels = new unsigned char [3 * scenes[0]->screen.width * scenes[0]->screen.height];            
 
-            //OnlineRenderSystem onlineRenderSystem;
+            OnlineRenderSystem onlineRenderSystem;
 
             OfflineRenderSystem offlineRenderSystem;
             offlineRenderSystem.RenderScene (*scenes[0], pixels);
 
-            save_image(scenes[0]->screen.width, scenes[0]->screen.height, (char*)outputFileName.c_str(), pixels);
+            stbi_write_png((char*)outputFileName.c_str(), scenes[0]->screen.width, scenes[0]->screen.height, 3, pixels, scenes[0]->screen.width * 3);
 
             return 0;
         }

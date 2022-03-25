@@ -1,6 +1,13 @@
 {
     "scenes": {
         "main-scene": {
+            "scene-properties": {
+                "screen":
+                {
+                    "width": 1200,
+                    "height": 600
+                }
+            },
             "entities": {
                 "Camera": {
                     "components": {
@@ -24,14 +31,7 @@
                         "camera": {
                             "near-plane": 1,
                             "far-plane": 0,
-                            "left": -1,
-                            "right": 1,
-                            "bottom": -1,
-                            "top": 1,
-                            "resolution": {
-                                "x": 600,
-                                "y": 600
-                            }
+                            "h_fov": 90
                         }
                     }
                 },
@@ -146,6 +146,43 @@
                         }
                     }
                 },
+                "Sphere 4": {
+                    "components": {
+                        "transform": {
+                            "position": {
+                                "x": -6,
+                                "y": 2,
+                                "z": -10
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "scale": {
+                                "x": 1,
+                                "y": 2,
+                                "z": 1
+                            }
+                        },
+                        "sphere-renderer": {
+                            "material": {
+                                "color": {
+                                    "r": 0.25,
+                                    "g": 0.0,
+                                    "b": 0.25
+                                },
+                                "k": {
+                                    "ka": 1,
+                                    "kd": 1,
+                                    "ks": 0.9,
+                                    "kr": 0
+                                },
+                                "n": 50
+                            }
+                        }
+                    }
+                },
                 "Light 2": {
                     "components": {
                         "transform": {
@@ -205,6 +242,13 @@
             }
         },
         "test-scene": {
+            "scene-properties": {
+                "screen":
+                {
+                    "width": 600,
+                    "height": 600
+                }
+            }
         }
     }
 }
