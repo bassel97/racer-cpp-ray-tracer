@@ -4,6 +4,8 @@
 
 #include <ecs/component.hpp>
 
+#define Rad_Deg_2 0.00872664625
+
 namespace racer
 {
 
@@ -13,10 +15,8 @@ namespace racer
     public:
         float nearPlane;
         float farPlane;
-        float left;
-        float right;
-        float bottom;
-        float top;
+
+        float h_fov;
 
         Camera()
         {
@@ -26,10 +26,13 @@ namespace racer
         {
             nearPlane = cameraData["near-plane"];
             farPlane = cameraData["far-plane"];
-            left = cameraData["left"];
-            right = cameraData["right"];
-            bottom = cameraData["bottom"];
-            top = cameraData["top"];
+
+            h_fov = cameraData["h_fov"];
+        }
+
+        float GetVFov(float aspectRatio)
+        {
+            return 2.0 * atan ( 1 / (aspectRatio * tan ( h_fov * Rad_Deg_2 )) );
         }
     };
 

@@ -14,7 +14,7 @@ namespace racer {
 
     class Application{
         std::string fileName;
-        std::string outputFileName = "test3.ppm"; 
+        std::string outputFileName = "Result.ppm"; 
 
         void save_image(int Width, int Height, char* fname, unsigned char* pixels) {
             FILE *fp;
@@ -50,7 +50,7 @@ namespace racer {
             
             unsigned char *pixels = new unsigned char [3 * scenes[0]->screen.width * scenes[0]->screen.height];            
 
-            OnlineRenderSystem onlineRenderSystem;
+            //OnlineRenderSystem onlineRenderSystem;
 
             OfflineRenderSystem offlineRenderSystem;
             offlineRenderSystem.RenderScene (*scenes[0], pixels);

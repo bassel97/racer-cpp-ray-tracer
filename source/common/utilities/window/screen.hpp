@@ -10,6 +10,8 @@ namespace racer
             int width;
             int height;
 
+            float aspectRatio;
+
             Screen (){}
 
             Screen (nlohmann::json screenData)
@@ -21,6 +23,8 @@ namespace racer
             {
                 width = screenData["width"];
                 height = screenData["height"];
+
+                aspectRatio = (float)width / height;
             }
     };
 } // namespace racer

@@ -1,5 +1,7 @@
 #pragma once
 
+# define M_PI           3.14159265358979323846  /* pi */
+
 #include <glm/glm.hpp>
 
 #include <ecs/scene.hpp>
@@ -137,9 +139,9 @@ namespace racer
             {
                 for (int k = 0; k < scene.screen.width; k++)
                 {
-
-                    float u = camera.left + ((camera.right - camera.left) / (scene.screen.width)) * (float)(k);
-                    float v = camera.top + ((camera.bottom - camera.top) / (scene.screen.height)) * (float)(i);
+                    //std::cout << tan ( (camera.fov * 3.14159265f) / 360.0f ) << std::endl;
+                    float u = (2.0f * (((float)(k) + 0.5f) / (scene.screen.width)) - 1.0f) * scene.screen.aspectRatio * tan ( camera.GetVFov(scene.screen.aspectRatio) / 2.0);
+                    float v = (1.0f - 2.0f * (((float)(i) + 0.5f) / (scene.screen.height))) * tan ( camera.GetVFov(scene.screen.aspectRatio) / 2.0);
                     float d = -camera.nearPlane;
 
                     glm::vec3 direction = {u, v, d};
