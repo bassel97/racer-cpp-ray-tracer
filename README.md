@@ -18,7 +18,7 @@ Rendering an image given a file with spheres positions (Position, Scale, Color, 
 |![Real-time preview](assets/media/preview-window.PNG "Real-time preview")|![Rendered Image](assets/media/render-image.png "Rendered Image")|
 
 In action preview:
-![Preview Gif](assets/media/Progress#1.gif "preview")
+![Real-time preview](assets/media/Progress%231.gif "Real-time preview")
 ---
 
 ## TODO list and improvements:
