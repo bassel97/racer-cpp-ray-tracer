@@ -1,0 +1,249 @@
+{
+    "scenes": {
+        "main-scene": {
+            "scene-properties": {
+                "screen": {
+                    "width": 1200,
+                    "height": 600
+                },
+                "environment-color": {
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0
+                }
+            },
+            "entities": {
+                "Camera": {
+                    "components": {
+                        "transform": {
+                            "position": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "scale": {
+                                "x": 1,
+                                "y": 1,
+                                "z": 1
+                            }
+                        },
+                        "camera": {
+                            "near-plane": 1,
+                            "far-plane": 0,
+                            "h_fov": 90
+                        }
+                    }
+                },
+                "Sphere 1": {
+                    "components": {
+                        "transform": {
+                            "position": {
+                                "x": 0,
+                                "y": 0,
+                                "z": -10
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "scale": {
+                                "x": 2,
+                                "y": 4,
+                                "z": 2
+                            }
+                        },
+                        "sphere-renderer": {
+                            "material": {
+                                "color": {
+                                    "r": 0.5,
+                                    "g": 0.0,
+                                    "b": 0.0
+                                },
+                                "k": {
+                                    "ka": 1,
+                                    "kd": 1,
+                                    "ks": 0.9,
+                                    "kr": 0
+                                },
+                                "n": 50
+                            }
+                        }
+                    }
+                },
+                "Sphere 2": {
+                    "components": {
+                        "transform": {
+                            "position": {
+                                "x": 4,
+                                "y": 4,
+                                "z": -10
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "scale": {
+                                "x": 1,
+                                "y": 2,
+                                "z": 1
+                            }
+                        },
+                        "sphere-renderer": {
+                            "material": {
+                                "color": {
+                                    "r": 0.0,
+                                    "g": 0.5,
+                                    "b": 0.0
+                                },
+                                "k": {
+                                    "ka": 1,
+                                    "kd": 1,
+                                    "ks": 0.9,
+                                    "kr": 0
+                                },
+                                "n": 50
+                            }
+                        }
+                    }
+                },
+                "Sphere 3": {
+                    "components": {
+                        "transform": {
+                            "position": {
+                                "x": -4,
+                                "y": 2,
+                                "z": -10
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "scale": {
+                                "x": 1,
+                                "y": 2,
+                                "z": 1
+                            }
+                        },
+                        "sphere-renderer": {
+                            "material": {
+                                "color": {
+                                    "r": 0.0,
+                                    "g": 0.0,
+                                    "b": 0.5
+                                },
+                                "k": {
+                                    "ka": 1,
+                                    "kd": 1,
+                                    "ks": 0.9,
+                                    "kr": 0
+                                },
+                                "n": 50
+                            }
+                        }
+                    }
+                },
+                "Sphere 4": {
+                    "components": {
+                        "transform": {
+                            "position": {
+                                "x": -6,
+                                "y": 2,
+                                "z": -10
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "scale": {
+                                "x": 1,
+                                "y": 2,
+                                "z": 1
+                            }
+                        },
+                        "sphere-renderer": {
+                            "material": {
+                                "color": {
+                                    "r": 0.25,
+                                    "g": 0.0,
+                                    "b": 0.25
+                                },
+                                "k": {
+                                    "ka": 1,
+                                    "kd": 1,
+                                    "ks": 0.9,
+                                    "kr": 0
+                                },
+                                "n": 50
+                            }
+                        }
+                    }
+                },
+                "Light 2": {
+                    "components": {
+                        "transform": {
+                            "position": {
+                                "x": 10,
+                                "y": 10,
+                                "z": -10
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "scale": {
+                                "x": 1,
+                                "y": 1,
+                                "z": 1
+                            }
+                        },
+                        "light": {
+                            "color": {
+                                "r": 0.9,
+                                "g": 0.9,
+                                "b": 0.0
+                            }
+                        }
+                    }
+                },
+                "Light 3": {
+                    "components": {
+                        "transform": {
+                            "position": {
+                                "x": -10,
+                                "y": 5,
+                                "z": -5
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0,
+                                "z": 0
+                            },
+                            "scale": {
+                                "x": 1,
+                                "y": 1,
+                                "z": 1
+                            }
+                        },
+                        "light": {
+                            "color": {
+                                "r": 0.0,
+                                "g": 0.0,
+                                "b": 0.9
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

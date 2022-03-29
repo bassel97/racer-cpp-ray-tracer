@@ -18,9 +18,11 @@ Rendering an image given a file with spheres positions (Position, Scale, Color, 
 - [ ] More seperation files and create application structue.
 - [ ] Add more complex shapes.
 - [ ] Implement OBJ importing with materials.
-- [ ] Replace the input file to be in a JSON formula.
-- [ ] Use OpenGL to live show effects.
+- [x] Replace the input file to be in a JSON formula.
+- [x] Use OpenGL to live show effects.
 - [ ] Use ImGUI to make changes in scene.
 - [ ] Use ImGizmos to actively manipulate the scene.
 - [ ] Introduce threading to the project.
 - [ ] Try to use graphics card in accelerating.
+- [ ] Commenting.
+- [ ] Styling using google sheets.

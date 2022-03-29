@@ -11,6 +11,7 @@
 #include <render/components/camera.hpp>
 #include <render/components/light.hpp>
 
+#include <shapes/shape.hpp>
 #include <shapes/sphere/sphere-shape.hpp>
 
 namespace racer

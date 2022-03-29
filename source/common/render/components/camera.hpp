@@ -20,6 +20,10 @@ namespace racer
 
         Camera()
         {
+            nearPlane = 1.0f;
+            farPlane = 0.0f;
+
+            h_fov = 90.0f;
         }
 
         Camera(nlohmann::json cameraData)
@@ -32,7 +36,7 @@ namespace racer
 
         float GetVFov(float aspectRatio)
         {
-            return 2.0 * atan ( 1 / (aspectRatio * tan ( h_fov * Rad_Deg_2 )) );
+            return 2 * (float)atan ( 1 / (aspectRatio * tan ( h_fov * Rad_Deg_2 )) );
         }
     };
 

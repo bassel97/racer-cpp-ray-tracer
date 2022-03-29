@@ -34,6 +34,7 @@ include_directories(
     vendor/utils
     vendor/JSON
     vendor/stb
+    vendor/tiny-obj-loader
 )
 
 # Source files of GLAD
@@ -43,5 +44,5 @@ set(GLAD_SOURCE vendor/glad/src/gl.c)
 set(VENDOR_SOURCES ${GLAD_SOURCE} ${IMGUI_SOURCES})
 
 # add the executable
-add_executable(RACER source/main.cpp ${VENDOR_SOURCES} ${RACER_SOURCES})
+add_executable(RACER source/main.cpp resources.rc ${VENDOR_SOURCES} ${RACER_SOURCES})
 target_link_libraries(RACER glfw)

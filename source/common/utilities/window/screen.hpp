@@ -4,27 +4,38 @@
 
 namespace racer
 {
-    class Screen{
+    class Screen
+    {
 
-        public:
-            int width;
-            int height;
+    public:
+        int width;
+        int height;
 
-            float aspectRatio;
+        float aspectRatio;
 
-            Screen (){}
+        Screen() {}
 
-            Screen (nlohmann::json screenData)
-            {
-                SetScreen (screenData);
-            }
+        Screen(int width, int height) : width(width), height(height)
+        {
+        }
 
-            void SetScreen (nlohmann::json screenData)
-            {
-                width = screenData["width"];
-                height = screenData["height"];
+        Screen(nlohmann::json screenData)
+        {
+            SetScreen(screenData);
+        }
 
-                aspectRatio = (float)width / height;
-            }
+        void SetScreen(nlohmann::json screenData)
+        {
+            width = screenData["width"];
+            height = screenData["height"];
+
+            aspectRatio = (float)width / height;
+        }
+
+        void SetScreen(int width, int height)
+        {
+            this->width = width;
+            this->height = height;
+        }
     };
 } // namespace racer

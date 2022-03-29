@@ -13,30 +13,44 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-namespace racer {
+namespace racer
+{
 
-    class Application{
-        std::string fileName;
-        std::string outputFileName = "Result.png"; 
+    class Application
+    {
 
-        public:
-        Application(){}
+    public:
+        Application() {}
 
-        int Run(){
-            std::ifstream istream("D:/Personal_Projects/racer-cpp-ray-tracer/build/Debug/file.json");
-            nlohmann::json j;
-            istream >> j;
+        int Run()
+        {
 
-            std::vector<Scene*> scenes = Scene::PopulateScenes(j["scenes"]);
-            
-            unsigned char *pixels = new unsigned char [3 * scenes[0]->screen.width * scenes[0]->screen.height];            
+            std::vector<Scene *> scenes;
 
-            OnlineRenderSystem onlineRenderSystem;
+            std::ifstream startupFile("start-up.json");
+            if (!startupFile.fail())
+            {
+                nlohmann::json jsonData;
+                startupFile >> jsonData;
 
-            OfflineRenderSystem offlineRenderSystem;
-            offlineRenderSystem.RenderScene (*scenes[0], pixels);
+                scenes = Scene::PopulateScenes(jsonData["scenes"]);
+            }
+            else
+            {
+                scenes.push_back(new Scene("Empty Scene"));
+            }
 
-            stbi_write_png((char*)outputFileName.c_str(), scenes[0]->screen.width, scenes[0]->screen.height, 3, pixels, scenes[0]->screen.width * 3);
+            for (int i = 0; i < scenes.size(); i++)
+            {
+                unsigned char *pixels = new unsigned char[3 * scenes[i]->screen.width * scenes[i]->screen.height];
+
+                previewSystem::OnlineRenderSystem onlineRenderSystem(scenes[i]);
+
+                OfflineRenderSystem offlineRenderSystem;
+                offlineRenderSystem.RenderScene(scenes[i], pixels);
+
+                stbi_write_png((scenes[i]->name + ".png").c_str(), scenes[i]->screen.width, scenes[i]->screen.height, 3, pixels, scenes[i]->screen.width * 3);
+            }
 
             return 0;
         }
