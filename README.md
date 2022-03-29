@@ -1,8 +1,9 @@
-# Racer Engine
-![Logo](https://github.com/bassel97/racer-cpp-ray-tracer/blob/main/assets/logo/racer-logo.png "Racer Logo")
-A practice project using c++ to create a Ray tracer.
-This was an assignment and in development into a Ray tracing engine.
-Currently optimizing this project and adding more real time features. 
+# <img src="assets/logo/racer-icon.png" alt="drawing" style="width:2ex;"/> Racer Engine
+<img src="assets/logo/racer-logo.png" alt="drawing" style="width:600px;"/>
+
+A ray tracing engine developed in c++, with real time preview and edit using openGL and ImGUI.
+
+Create for practice. 
 
 ## Development documentation:
 ### 1. Simple spheres ray tracing:
