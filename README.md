@@ -10,7 +10,15 @@ Create for practice.
 Rendering an image given a file with spheres positions (Position, Scale, Color, Reflection properties), lights and camera properties.
 | Input file|Image|
 |-------------|:-------------:|
-|NEAR 1<br>LEFT -1<br>RIGHT 1<br>BOTTOM -1<br>TOP 1<br>RES 600 600<br>SPHERE s1 0 0 -10 2 4 2 0.5 0 0 1 1 0.9 0 50<br>SPHERE s2 4 4 -10 1 2 1 0 0.5 0 1 1 0.9 0 50<br>SPHERE s3 -4 2 -10 1 2 1 0 0 0.5 1 1 0.9 0 50<br>SPHERE s4 0 0 -1 0.25 0.25 0.5 0 0 0.5 1 1 1 0 50<br>LIGHT l1 0 0 -1 0.3 0.3 0.3<br>LIGHT l2 10 10 -10 0.9 0.9 0<br>LIGHT l3 -10 5 -5 0 0 0.9<br>BACK 1 1 1<br>AMBIENT 0.2 0.2 0.2|![Spheres ray tracing](https://github.com/bassel97/racer-cpp-ray-tracer/blob/main/tests/illum/testIllum.png "Spheres")|
+|NEAR 1<br>LEFT -1<br>RIGHT 1<br>BOTTOM -1<br>TOP 1<br>RES 600 600<br>SPHERE s1 0 0 -10 2 4 2 0.5 0 0 1 1 0.9 0 50<br>SPHERE s2 4 4 -10 1 2 1 0 0.5 0 1 1 0.9 0 50<br>SPHERE s3 -4 2 -10 1 2 1 0 0 0.5 1 1 0.9 0 50<br>SPHERE s4 0 0 -1 0.25 0.25 0.5 0 0 0.5 1 1 1 0 50<br>LIGHT l1 0 0 -1 0.3 0.3 0.3<br>LIGHT l2 10 10 -10 0.9 0.9 0<br>LIGHT l3 -10 5 -5 0 0 0.9<br>BACK 1 1 1<br>AMBIENT 0.2 0.2 0.2|![Spheres ray tracing](tests/illum/testIllum.png "Spheres")|
+---
+### 2. Real-time preview then rendering
+| Real-time preview | Rendered Image |
+|-------------|:-------------:|
+|![Real-time preview](assets/media/preview-window.PNG "Real-time preview")|![Rendered Image](assets/media/render-image.png "Rendered Image")|
+
+In action preview:
+![Preview Gif](assets/media/Progress#1.gif "preview")
 ---
 
 ## TODO list and improvements:
