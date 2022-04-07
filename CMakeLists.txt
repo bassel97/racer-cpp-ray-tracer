@@ -15,6 +15,7 @@ set(IMGUI_SOURCES
         vendor/imgui/imgui.cpp
         vendor/imgui/imgui_demo.cpp
         vendor/imgui/imgui_draw.cpp
+        vendor/imgui/imgui_tables.cpp
         vendor/imgui/imgui_widgets.cpp
         vendor/imgui/imgui_impl/imgui_impl_glfw.cpp
         vendor/imgui/imgui_impl/imgui_impl_opengl3.cpp
