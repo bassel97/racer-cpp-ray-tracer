@@ -47,7 +47,7 @@ int racer::Application::Run()
         std::cout << width << " " << height << std::endl;
         real_time_renderer_system_.ResizeTexture(width, height);
         real_time_renderer_system_.RenderScene(active_scene);
-        window_.RenderFrame(real_time_renderer_system_.framebuffer);
+        window_.RenderFrame(real_time_renderer_system_.frame_buffer_);
     }
 
     return 0;

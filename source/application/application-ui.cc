@@ -1,7 +1,5 @@
 #include "application-ui.h"
 
-#include <iostream>
-
 racer::ApplicationUI::ApplicationUI(GLFWwindow *glfw_window)
 {
     IMGUI_CHECKVERSION();
@@ -145,8 +143,6 @@ void racer::ApplicationUI::RenderPreviewWindow(ImTextureID im_texture_id)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     if (ImGui::Begin("Preview Window", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMove))
     {
-        // std::cout << ImGui::GetContentRegionAvail().x << " " << ImGui::GetContentRegionAvail().y << std::endl;
-
         preview_window_width_ = ImGui::GetContentRegionAvail().x;
         preview_window_height_ = ImGui::GetContentRegionAvail().y;
 

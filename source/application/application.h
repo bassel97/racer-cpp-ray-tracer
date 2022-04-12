@@ -7,7 +7,6 @@
 
 #include <json.hpp>
 
-#include <preview-system/online-render-system.hpp>
 #include <render/systems/offline-render-system.hpp>
 
 #include <scene.h>
