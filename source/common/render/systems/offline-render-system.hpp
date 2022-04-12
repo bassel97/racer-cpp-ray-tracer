@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-#include <ecs/scene.hpp>
+#include <scene.h>
 
 namespace racer
 {

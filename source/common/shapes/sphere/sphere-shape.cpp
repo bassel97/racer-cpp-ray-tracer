@@ -1,5 +1,5 @@
 #include "sphere-shape.hpp"
-#include <ecs/entity.hpp>
+#include <entity.hpp>
 
 namespace racer
 {

@@ -4,7 +4,7 @@
 
 #include <json.hpp>
 
-#include <ecs/component.hpp>
+#include <component.hpp>
 
 namespace racer
 {

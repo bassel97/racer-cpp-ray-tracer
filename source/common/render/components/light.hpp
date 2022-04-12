@@ -5,7 +5,7 @@
 #include <json.hpp>
 #include <glm/glm.hpp>
 
-#include <ecs/component.hpp>
+#include <component.hpp>
 
 namespace racer
 {

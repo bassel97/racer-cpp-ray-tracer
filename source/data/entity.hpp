@@ -6,8 +6,8 @@
 
 #include <json.hpp>
 
-#include <ecs/component.hpp>
-#include <ecs/components/transform.hpp>
+#include <component.hpp>
+#include <components/transform.hpp>
 #include <render/components/camera.hpp>
 #include <render/components/light.hpp>
 

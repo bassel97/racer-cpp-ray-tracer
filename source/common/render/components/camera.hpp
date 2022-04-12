@@ -2,7 +2,7 @@
 
 #include <json.hpp>
 
-#include <ecs/component.hpp>
+#include <component.hpp>
 
 #define Rad_Deg_2 0.00872664625
 

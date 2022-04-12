@@ -3,14 +3,12 @@
 #include <sstream>
 #include <string>
 
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
-#include <stb_image.h>
 
 #include <tiny_obj_loader.h>
 
-#include <ecs/scene.hpp>
+#include <scene.h>
 #include <preview-system/preview-structs.hpp>
 #include <preview-system/primitive-shapes/cube-preview-data.hpp>
 #include <preview-system/primitive-shapes/sphere-preview-data.hpp>
@@ -75,13 +73,13 @@ namespace racer
                 glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
             }
 
-            void setWindowIcon()
+            /*void setWindowIcon()
             {
                 GLFWimage images[1];
                 images[0].pixels = stbi_load("racer-icon.png", &images[0].width, &images[0].height, 0, 4); // rgba channels
                 glfwSetWindowIcon(window, 1, images);
                 stbi_image_free(images[0].pixels);
-            }
+            }*/
 
             void showContextInfo()
             {
@@ -122,7 +120,11 @@ namespace racer
                 }
                 glfwMakeContextCurrent(window); // Tell GLFW to make the context of our window the main context on the current thread.
 
-                gladLoadGL(glfwGetProcAddress); // Load the OpenGL functions from the driver
+                if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+                {
+                    std::cout << "Failed to initialize GLAD" << std::endl;
+                    return;
+                }
 
                 // Setup Dear ImGui context
                 IMGUI_CHECKVERSION();
@@ -141,7 +143,7 @@ namespace racer
                 ImGui_ImplGlfw_InitForOpenGL(window, true);
                 ImGui_ImplOpenGL3_Init("#version 330");
 
-                setWindowIcon();
+                //setWindowIcon();
 
                 setPrimitiveModels();
 
