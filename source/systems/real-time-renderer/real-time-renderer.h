@@ -6,12 +6,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <scene.h>
-#include <preview-system/preview-structs.hpp>
-#include <preview-system/primitive-model.hpp>
-#include <preview-system/primitive-shapes/cube-preview-data.hpp>
-#include <preview-system/primitive-shapes/sphere-preview-data.hpp>
-#include <preview-system/shader/shader.hpp>
-#include <preview-system/shader/shader-files.hpp>
+#include "utils/primitive-model.h"
+#include "utils/primitive-shapes/cube-preview-data.h"
+#include "utils/primitive-shapes/sphere-preview-data.h"
+#include "utils/shader/shader.h"
+#include "utils/shader/shader-files.h"
 
 namespace racer
 {
@@ -30,11 +29,11 @@ namespace racer
         unsigned int texture_Colorbuffer_;
         unsigned int render_buffer_object_;
 
-        previewSystem::PrimitiveModel sphere_model_;
-        previewSystem::PrimitiveModel cube_model_;
+        PrimitiveModel sphere_model_;
+        PrimitiveModel cube_model_;
 
         // TODO (Bassel): Replace with more advanced shader
-        previewSystem::Shader rendering_shader_;
+        Shader rendering_shader_;
     };
 }
 

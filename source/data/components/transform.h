@@ -1,36 +1,18 @@
-#pragma once
+#ifndef RACER_COMPONENT_TRANSFORM_H_
+#define RACER_COMPONENT_TRANSFORM_H_
 
 #include <glm/glm.hpp>
 
 #include <json.hpp>
 
-#include <component.hpp>
+#include <component.h>
 
 namespace racer
 {
-
     class Transform : public Component
     {
-    private:
     public:
-        glm::vec3 position;
-        glm::vec3 rotation;
-        glm::vec3 scale;
-
-        Transform()
-        {
-            position.x = 0.0f;
-            position.y = 0.0f;
-            position.z = 0.0f;
-
-            rotation.x = 0.0f;
-            rotation.y = 0.0f;
-            rotation.z = 0.0f;
-
-            scale.x = 1.0f;
-            scale.y = 1.0f;
-            scale.z = 1.0f;
-        }
+        Transform();
 
         Transform(nlohmann::json transformData)
         {
@@ -50,6 +32,14 @@ namespace racer
             scale.y = scaleData["y"];
             scale.z = scaleData["z"];
         }
+
+        void ResetTransform();
+
+        glm::vec3 position;
+        glm::vec3 rotation;
+        glm::vec3 scale;
     };
 
 } // namespace racer
+
+#endif // RACER_COMPONENT_TRANSFORM_H_

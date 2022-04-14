@@ -73,6 +73,8 @@ void racer::Window::RenderFrame(unsigned int preview_frame_id)
     application_ui_->SetIMGUILayout();
 
     application_ui_->RenderPreviewWindow((ImTextureID)(intptr_t)preview_frame_id);
+    application_ui_->RenderRenderResultWindow((ImTextureID)(intptr_t)preview_frame_id);
+    application_ui_->RenderRenderOptionsWindow();
 
     application_ui_->RenderIMGUIFrame();
 

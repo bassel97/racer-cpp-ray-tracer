@@ -7,9 +7,13 @@
 
 #include <json.hpp>
 
-#include <entity.hpp>
+#include <entity.h>
 
 #include <utilities/window/screen.hpp>
+
+#include <components/renderer/renderer-component.h>
+#include <render/components/light.hpp>
+#include <render/components/camera.hpp>
 
 namespace racer
 {
@@ -22,7 +26,7 @@ namespace racer
 
         Screen screen;
 
-        std::vector<Shape *> shapesToRender;
+        std::vector<RendererComponent *> shapesToRender;
         std::vector<Light *> ligths;
         std::vector<Camera *> cameras;
         Camera *activeCamera;

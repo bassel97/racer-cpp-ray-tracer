@@ -23,15 +23,6 @@ set(IMGUI_SOURCES
         vendor/imgui/imgui_impl/imgui_impl_opengl3.cpp
         )
 
-#include_directories(
-#    source/common
-#    vendor/glm/
-#    vendor/glfw/include
-#    vendor/glad/include
-#    vendor/utils
-#    vendor/tiny-obj-loader
-#)
-
 # Vendor source files variable
 set(VENDOR_SOURCES ${IMGUI_SOURCES})
 
@@ -41,10 +32,15 @@ set(SourceCode
     source/application/application-ui.cc
 
     source/data/scene.cc
-    
-    source/common/shapes/sphere/sphere-shape.cpp
+    source/data/component.cc
+    source/data/entity.cc
+
+    source/data/components/transform.cc
+    source/data/components/renderer/renderer-component.cc
+    source/data/components/renderer/sphere-renderer.cc
 
     source/systems/real-time-renderer/real-time-renderer.cc
+    source/systems/ray-tracing-renderer/ray-tracing-renderer.cc
     )
 
 # add the executable

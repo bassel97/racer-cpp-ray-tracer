@@ -13,7 +13,7 @@ int racer::Application::Run()
 
     Scene *active_scene;
 
-    std::ifstream startupFile("E:\\Bassel\\Racer\\racer-cpp-ray-tracer\\build\\Debug\\start-up.json");
+    std::ifstream startupFile("start-up.json");
     if (!startupFile.fail())
     {
         nlohmann::json jsonData;
@@ -43,7 +43,9 @@ int racer::Application::Run()
         int width, height;
         window_.GetPreviewWindowSize(width, height);
         real_time_renderer_system_.ResizeTexture(width, height);
+        
         real_time_renderer_system_.RenderScene(active_scene);
+
         window_.RenderFrame(real_time_renderer_system_.frame_buffer_);
     }
 

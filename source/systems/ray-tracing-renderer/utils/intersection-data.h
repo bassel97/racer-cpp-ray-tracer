@@ -2,13 +2,10 @@
 #include <glm/glm.hpp>
 
 namespace racer {
-
     struct IntersectionData {
-        
             bool intersected;
             glm::vec3 pointOfIntersection;
             glm::vec3 normalToIntersection;
-
             double t;
 
             IntersectionData():
@@ -22,7 +19,5 @@ namespace racer {
                 normalToIntersection(normalToIntersection),
                 t(t)
             {}
-
     };
-
 }

@@ -23,6 +23,8 @@ namespace racer
 
         void GetPreviewWindowSize(int &, int &);
         void RenderPreviewWindow(ImTextureID);
+        void RenderRenderResultWindow(ImTextureID);
+        void RenderRenderOptionsWindow();
 
         bool IsWindowClosed() const;
 

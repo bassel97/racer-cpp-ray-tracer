@@ -35,7 +35,7 @@ racer::Scene::Scene(std::string name, nlohmann::json sceneData) : name(name)
             activeCamera = cameraComponent;
         }
 
-        Shape *shapeComponent = entity->GetComponent<Shape>();
+        RendererComponent *shapeComponent = entity->GetComponent<RendererComponent>();
         if (shapeComponent != NULL)
             shapesToRender.push_back(shapeComponent);
 

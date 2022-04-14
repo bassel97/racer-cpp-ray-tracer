@@ -1,9 +1,10 @@
-#include "sphere-shape.hpp"
-#include <entity.hpp>
+#include "sphere-renderer.h"
+
+#include <entity.h>
 
 namespace racer
 {
-    IntersectionData Sphere::DidIntersectWithRay(Ray ray)
+    IntersectionData SphereRendererComponent::RayTrace(Ray ray)
     {
         ray.origin = (ray.origin - holdingEntity->transform->position) / holdingEntity->transform->scale;
 

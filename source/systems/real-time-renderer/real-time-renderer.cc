@@ -1,8 +1,8 @@
 #include "real-time-renderer.h"
 
-racer::RealtimeRendererSystem::RealtimeRendererSystem(int width, int height) : rendering_shader_(previewSystem::MVP_VertexShader, previewSystem::diffuseFragmentShader),
-                                                                               sphere_model_(previewSystem::sphereObjDataFile),
-                                                                               cube_model_(previewSystem::cubeObjDataFile)
+racer::RealtimeRendererSystem::RealtimeRendererSystem(int width, int height) : rendering_shader_(kMVPVertexShader, kDiffuseFragmentShader),
+                                                                               sphere_model_(sphereObjDataFile),
+                                                                               cube_model_(cubeObjDataFile)
 {
     render_frame_width_ = width;
     render_frame_height_ = height;
@@ -79,7 +79,7 @@ void racer::RealtimeRendererSystem::RenderScene(Scene *scene)
 
         rendering_shader_.setVec3("viewDir", glm::vec3(0, 0, -1));
 
-        rendering_shader_.setVec3("color", scene->shapesToRender[i]->renderingMaterial.color);
+        rendering_shader_.setVec3("color", scene->shapesToRender[i]->rendering_material_.color);
 
         rendering_shader_.setMat4("MVP", projection * view * model);
 

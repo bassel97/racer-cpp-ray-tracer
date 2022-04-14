@@ -106,27 +106,12 @@ void racer::ApplicationUI::SetIMGUILayout()
 
     ImGui::End();
 
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    if (ImGui::Begin("Render Result", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMove))
-    {
-        ImGuiIO &io = ImGui::GetIO();
-        ImTextureID my_tex_id = io.Fonts->TexID;
-        ImVec2 pos = ImGui::GetCursorScreenPos();
-        ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-        ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-        ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
-        ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
-        ImGui::Image(my_tex_id, (ImGui::GetContentRegionAvail()), uv_min, uv_max, tint_col, border_col);
-    }
-    ImGui::End();
-    ImGui::PopStyleVar();
-
-    if (ImGui::Begin("Scene Hierarchy", NULL, ImGuiWindowFlags_NoMove))
+    if (ImGui::Begin("Scene Hierarchy"))
     {
     }
     ImGui::End();
 
-    if (ImGui::Begin("Component Inspector", NULL, ImGuiWindowFlags_NoMove))
+    if (ImGui::Begin("Component Inspector"))
     {
     }
     ImGui::End();
@@ -141,7 +126,7 @@ void racer::ApplicationUI::GetPreviewWindowSize(int &width, int &height)
 void racer::ApplicationUI::RenderPreviewWindow(ImTextureID im_texture_id)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    if (ImGui::Begin("Preview Window", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMove))
+    if (ImGui::Begin("Preview Window", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
     {
         preview_window_width_ = ImGui::GetContentRegionAvail().x;
         preview_window_height_ = ImGui::GetContentRegionAvail().y;
@@ -150,6 +135,27 @@ void racer::ApplicationUI::RenderPreviewWindow(ImTextureID im_texture_id)
     }
     ImGui::End();
     ImGui::PopStyleVar();
+}
+
+void racer::ApplicationUI::RenderRenderResultWindow(ImTextureID im_texture_id)
+{
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    if (ImGui::Begin("Render Result", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
+    {
+        ImGuiIO &io = ImGui::GetIO();
+        ImGui::Image(im_texture_id, ImGui::GetContentRegionAvail());
+    }
+    ImGui::End();
+    ImGui::PopStyleVar();
+}
+
+void racer::ApplicationUI::RenderRenderOptionsWindow()
+{
+    if (ImGui::Begin("Render Options"))
+    {
+        ImGuiIO &io = ImGui::GetIO();
+    }
+    ImGui::End();
 }
 
 void racer::ApplicationUI::RenderIMGUIFrame()

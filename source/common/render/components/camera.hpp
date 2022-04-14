@@ -2,7 +2,7 @@
 
 #include <json.hpp>
 
-#include <component.hpp>
+#include <component.h>
 
 #define Rad_Deg_2 0.00872664625
 
