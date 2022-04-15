@@ -1,26 +1,27 @@
 #include "ray-tracing-renderer.h"
 
-void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned char *pixels)
+void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned char *pixels, int width, int height)
 {
     this->scene = sceneToRender;
 
-    float fov_correction = static_cast<float>(tan(scene->activeCamera->GetVFov(scene->screen.aspectRatio) / 2.0));
+    float aspectRatio = (float)width / height;
+    float fov_correction = static_cast<float>(tan(scene->activeCamera->GetVFov(aspectRatio) / 2.0));
 
-    for (int i = 0; i < scene->screen.height; i++)
+    for (int i = 0; i < height; i++)
     {
-        for (int k = 0; k < scene->screen.width; k++)
+        for (int k = 0; k < width; k++)
         {
-            float u = (2.0f * ((static_cast<float>(k) + 0.5f) / (scene->screen.width)) - 1.0f) * scene->screen.aspectRatio * fov_correction;
-            float v = (1.0f - 2.0f * ((static_cast<float>(i) + 0.5f) / (scene->screen.height))) * fov_correction;
+            float u = (2.0f * ((static_cast<float>(k) + 0.5f) / width) - 1.0f) * aspectRatio * fov_correction;
+            float v = (1.0f - 2.0f * ((static_cast<float>(i) + 0.5f) / height)) * fov_correction;
             float d = -scene->activeCamera->nearPlane;
 
             glm::vec3 direction = {u, v, d};
             glm::vec3 cameraOrigin = scene->activeCamera->holdingEntity->transform->position;
             glm::vec3 pixelColor = GetPixelColor(cameraOrigin, direction, 0);
 
-            pixels[i * scene->screen.width * 3 + k * 3] = (char)(pixelColor.r * 255);
-            pixels[i * scene->screen.width * 3 + k * 3 + 1] = (char)(pixelColor.g * 255);
-            pixels[i * scene->screen.width * 3 + k * 3 + 2] = (char)(pixelColor.b * 255);
+            pixels[i * width * 3 + k * 3] = (char)(pixelColor.r * 255);
+            pixels[i * width * 3 + k * 3 + 1] = (char)(pixelColor.g * 255);
+            pixels[i * width * 3 + k * 3 + 2] = (char)(pixelColor.b * 255);
         }
     }
 }
@@ -61,7 +62,6 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
 
     if (intersected)
     {
-
         pixelColor = nearShape->rendering_material_.Ka * scene->environmentColor * nearShape->rendering_material_.color;
 
         for (size_t lightIndex = 0; lightIndex < scene->ligths.size(); lightIndex++)
@@ -109,5 +109,6 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
     pixelColor.r = std::min(1.0f, std::max(0.0f, pixelColor.r));
     pixelColor.g = std::min(1.0f, std::max(0.0f, pixelColor.g));
     pixelColor.b = std::min(1.0f, std::max(0.0f, pixelColor.b));
+
     return pixelColor;
 }

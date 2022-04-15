@@ -64,7 +64,7 @@ void racer::Window::SetWindowIcon()
     stbi_image_free(images[0].pixels);
 }
 
-void racer::Window::RenderFrame(unsigned int preview_frame_id)
+void racer::Window::RenderFrame(unsigned int preview_frame_id, unsigned int rendered_frame_id)
 {
     glfwPollEvents();
 
@@ -73,7 +73,7 @@ void racer::Window::RenderFrame(unsigned int preview_frame_id)
     application_ui_->SetIMGUILayout();
 
     application_ui_->RenderPreviewWindow((ImTextureID)(intptr_t)preview_frame_id);
-    application_ui_->RenderRenderResultWindow((ImTextureID)(intptr_t)preview_frame_id);
+    application_ui_->RenderRenderResultWindow((ImTextureID)(intptr_t)rendered_frame_id);
     application_ui_->RenderRenderOptionsWindow();
 
     application_ui_->RenderIMGUIFrame();
@@ -97,6 +97,16 @@ void racer::Window::CloseWindow()
 void racer::Window::GetPreviewWindowSize(int &width, int &height)
 {
     application_ui_->GetPreviewWindowSize(width, height);
+}
+
+bool racer::Window::RayTraceRender(RenderProperties &render_properties)
+{
+    return application_ui_->RayTraceRender(render_properties);
+}
+
+void racer::Window::FinishedRayTracing()
+{
+    application_ui_->FinishedRayTracing();
 }
 
 bool racer::Window::IsWindowClosed() const

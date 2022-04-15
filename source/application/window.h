@@ -15,10 +15,12 @@ namespace racer
         Window &operator=(const Window &) = delete;
         ~Window();
 
-        void RenderFrame(unsigned int);
+        void RenderFrame(unsigned int, unsigned int);
         void CloseWindow();
 
         void GetPreviewWindowSize(int &, int &);
+        bool RayTraceRender(RenderProperties &);
+        void FinishedRayTracing();
 
         bool IsWindowClosed() const;
 

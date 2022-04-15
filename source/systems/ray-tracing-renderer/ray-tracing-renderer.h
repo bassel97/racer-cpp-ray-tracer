@@ -1,7 +1,6 @@
 #ifndef RACER_SYSTEMS_RAYTRACINGRENDERING_H_
 #define RACER_SYSTEMS_RAYTRACINGRENDERING_H_
 
-
 #define M_PI 3.14159265358979323846
 #include <glm/glm.hpp>
 #include <scene.h>
@@ -14,7 +13,9 @@ namespace racer
     class RayTracingRendererSystem
     {
     public:
-        void RenderScene(Scene *sceneToRender, unsigned char *pixels);
+        void RenderScene(Scene *sceneToRender, unsigned char *pixels, int width, int height);
+
+        unsigned int render_result_id_;
 
     private:
         Scene *scene;

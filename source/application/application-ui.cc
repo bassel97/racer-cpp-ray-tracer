@@ -131,7 +131,7 @@ void racer::ApplicationUI::RenderPreviewWindow(ImTextureID im_texture_id)
         preview_window_width_ = ImGui::GetContentRegionAvail().x;
         preview_window_height_ = ImGui::GetContentRegionAvail().y;
 
-        ImGui::Image(im_texture_id, ImGui::GetContentRegionAvail());
+        ImGui::Image(im_texture_id, ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
     }
     ImGui::End();
     ImGui::PopStyleVar();
@@ -140,10 +140,10 @@ void racer::ApplicationUI::RenderPreviewWindow(ImTextureID im_texture_id)
 void racer::ApplicationUI::RenderRenderResultWindow(ImTextureID im_texture_id)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    if (ImGui::Begin("Render Result", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
+    if (ImGui::Begin("Render Result", NULL, ImGuiWindowFlags_HorizontalScrollbar))
     {
         ImGuiIO &io = ImGui::GetIO();
-        ImGui::Image(im_texture_id, ImGui::GetContentRegionAvail());
+        ImGui::Image(im_texture_id, ImVec2(render_properties_.width, render_properties_.height));
     }
     ImGui::End();
     ImGui::PopStyleVar();
@@ -154,6 +154,10 @@ void racer::ApplicationUI::RenderRenderOptionsWindow()
     if (ImGui::Begin("Render Options"))
     {
         ImGuiIO &io = ImGui::GetIO();
+        ImGui::InputInt("width", &render_properties_.width);
+        ImGui::InputInt("height", &render_properties_.height);
+        if (ImGui::SmallButton("Render"))
+            start_render_ = true;
     }
     ImGui::End();
 }
@@ -169,4 +173,15 @@ void racer::ApplicationUI::RenderIMGUIFrame()
 bool racer::ApplicationUI::IsWindowClosed() const
 {
     return close_window_;
+}
+
+bool racer::ApplicationUI::RayTraceRender(RenderProperties &render_properties)
+{
+    render_properties = render_properties_;
+    return start_render_;
+}
+
+void racer::ApplicationUI::FinishedRayTracing()
+{
+    start_render_ = false;
 }

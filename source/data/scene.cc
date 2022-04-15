@@ -6,8 +6,6 @@ racer::Scene::Scene(std::string name) : name(name)
     environmentColor.g = 0.666666f;
     environmentColor.b = 0.666666f;
 
-    screen.SetScreen(512, 512);
-
     nlohmann::json emptyCameraData;
     Entity *cameraEntity = new Entity("Camera", emptyCameraData);
 
@@ -43,9 +41,7 @@ racer::Scene::Scene(std::string name, nlohmann::json sceneData) : name(name)
         if (lightComponent != NULL)
             ligths.push_back(lightComponent);
     }
-
-    screen.SetScreen(sceneData["scene-properties"]["screen"]);
-
+    
     environmentColor.r = sceneData["scene-properties"]["environment-color"]["r"];
     environmentColor.g = sceneData["scene-properties"]["environment-color"]["g"];
     environmentColor.b = sceneData["scene-properties"]["environment-color"]["b"];

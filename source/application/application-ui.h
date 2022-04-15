@@ -6,9 +6,16 @@
 #include <imgui.h>
 #include <imgui_impl/imgui_impl_glfw.h>
 #include <imgui_impl/imgui_impl_opengl3.h>
+#include <stb_image_write.h>
 
 namespace racer
 {
+
+    struct RenderProperties
+    {
+        int width = 1024, height = 720;
+    };
+
     class ApplicationUI
     {
     public:
@@ -28,13 +35,18 @@ namespace racer
 
         bool IsWindowClosed() const;
 
-        ImGuiIO *io;
+        bool RayTraceRender(RenderProperties&);
+        void FinishedRayTracing();
 
     protected:
+        ImGuiIO *io;
         bool close_window_ = false;
 
     private:
         int preview_window_width_, preview_window_height_;
+        
+        bool start_render_ = false;
+        RenderProperties render_properties_;
     };
 }
 

@@ -21,10 +21,19 @@ namespace racer
     {
 
     public:
+        Scene(std::string name);
+        Scene(std::string name, nlohmann::json sceneData);
+
+        void AddEntity(Entity *entity);
+        void RemoveEntity(Entity *entity);
+        int GetEntitiesCount() const
+        {
+            return static_cast<int>(entities.size());
+        }
+        static std::vector<Scene *> PopulateScenes(nlohmann::json scenes);
+
         std::string name;
         std::set<Entity *> entities;
-
-        Screen screen;
 
         std::vector<RendererComponent *> shapesToRender;
         std::vector<Light *> ligths;
@@ -32,22 +41,7 @@ namespace racer
         Camera *activeCamera;
 
         glm::vec3 environmentColor;
-
-        // Empty Scene
-        Scene(std::string name);
-        Scene(std::string name, nlohmann::json sceneData);
-
-        void AddEntity(Entity *entity);
-
-        void RemoveEntity(Entity *entity);
-
-        int GetEntitiesCount() const
-        {
-            return static_cast<int>(entities.size());
-        }
-
-        static std::vector<Scene *> PopulateScenes(nlohmann::json scenes);
     };
 } // namespace racer
 
-#endif  // RACER_DATA_SCENE_H_
+#endif // RACER_DATA_SCENE_H_
