@@ -57,6 +57,8 @@ int racer::Application::Run()
             glGenerateMipmap(GL_TEXTURE_2D);
 
             window_.FinishedRayTracing();
+
+            delete pixels;
         }
 
         window_.RenderFrame(active_scene, real_time_renderer_system_.frame_buffer_, texture);
