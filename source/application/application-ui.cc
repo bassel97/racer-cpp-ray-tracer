@@ -16,7 +16,6 @@ racer::ApplicationUI::ApplicationUI(GLFWwindow *glfw_window)
 
     ImGui_ImplGlfw_InitForOpenGL(glfw_window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-
 }
 
 racer::ApplicationUI::~ApplicationUI()
@@ -212,7 +211,18 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
                     Camera *cameraComponent = dynamic_cast<Camera *>(component);
                     if (cameraComponent)
                     {
-                        ImGui::DragFloat("horizontal FOV", &cameraComponent->h_fov, 0.01f);
+                        ImGui::DragFloat("Horizontal FOV", &cameraComponent->h_fov, 0.01f);
+                    }
+
+                    RendererComponent *rendererComponentComponent = dynamic_cast<RendererComponent *>(component);
+                    if (rendererComponentComponent)
+                    {
+                        ImGui::ColorEdit3("Color", glm::value_ptr(rendererComponentComponent->rendering_material_.color));
+
+                        ImGui::DragFloat("Ka", &rendererComponentComponent->rendering_material_.Ka, 0.01f);
+                        ImGui::DragFloat("Kd", &rendererComponentComponent->rendering_material_.Kd, 0.01f);
+                        ImGui::DragFloat("Kr", &rendererComponentComponent->rendering_material_.Kr, 0.01f);
+                        ImGui::DragFloat("Ks", &rendererComponentComponent->rendering_material_.Ks, 0.01f);
                     }
 
                     ImGui::Separator();
@@ -226,7 +236,7 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
 
 void racer::ApplicationUI::RenderIMGUIFrame()
 {
-    ImGui::ShowDemoWindow();
+    // ImGui::ShowDemoWindow();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -44,7 +44,7 @@ set(SourceCode
     )
 
 # add the executable
-add_executable(RACER source/main.cc resources.rc ${VENDOR_SOURCES} ${SourceCode})
+add_executable(RACER WIN32 source/main.cc resources.rc ${VENDOR_SOURCES} ${SourceCode})
 
 # Source Libraries
 target_include_directories(RACER PUBLIC

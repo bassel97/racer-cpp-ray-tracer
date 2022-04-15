@@ -16,7 +16,7 @@ int racer::Application::Run()
 
     Scene *active_scene;
 
-    std::ifstream startupFile("D:\\Personal_Projects\\racer-cpp-ray-tracer\\build\\Debug\\start-up.json");
+    std::ifstream startupFile("start-up.json");
     if (!startupFile.fail())
     {
         nlohmann::json jsonData;

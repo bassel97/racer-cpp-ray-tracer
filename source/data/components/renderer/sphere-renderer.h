@@ -24,7 +24,7 @@ namespace racer
 
         virtual std::string GetName()
         {
-            return "camera";
+            return "sphere renderer";
         }
     };
 }
