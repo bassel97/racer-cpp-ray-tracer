@@ -1,5 +1,8 @@
 #pragma once
 
+#include <sstream> // std::istringstream
+#include <string>  // std::string
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -7,6 +10,16 @@
 
 namespace racer
 {
+    struct Vertex
+    {
+        // position
+        glm::vec3 Position;
+        // normal
+        glm::vec3 Normal;
+        // texCoords
+        glm::vec2 TexCoords;
+    };
+
     class PrimitiveModel
     {
         GLuint modelVertexArrayObject;
@@ -31,7 +44,7 @@ namespace racer
                 for (int s = 0; s < shapes.size(); s++)
                 {
                     // Loop over faces(polygon)
-                    indicesSize = shapes[s].mesh.indices.size();
+                    indicesSize = static_cast<GLuint>(shapes[s].mesh.indices.size());
                     int index_offset = 0;
                     for (int f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
                     {

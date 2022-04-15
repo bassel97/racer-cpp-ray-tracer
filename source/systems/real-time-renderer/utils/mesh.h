@@ -17,7 +17,7 @@ using namespace std;
 namespace racer
 {
 
-    struct Vertex
+    /*struct Vertex
     {
         // position
         glm::vec3 Position;
@@ -148,5 +148,5 @@ namespace racer
             glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, m_Weights));
             glBindVertexArray(0);
         }
-    };
+    };*/
 }

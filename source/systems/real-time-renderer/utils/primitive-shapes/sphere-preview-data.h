@@ -5,7 +5,7 @@
 
 namespace racer
 {
-    const std::string sphereObjDataFile =
+    const std::string kSphereObjDataFile =
         "o Sphere\n"
         "v 0.000000 0.980785 -0.195090\n"
         "v 0.000000 0.923880 -0.382683\n"

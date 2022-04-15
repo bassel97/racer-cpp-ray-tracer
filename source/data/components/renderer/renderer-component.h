@@ -1,9 +1,11 @@
 #ifndef RACER_COMPONENT_RENDERER_H_
 #define RACER_COMPONENT_RENDERER_H_
 
+#include <glm/glm.hpp>
 #include <component.h>
 #include <ray-tracing-renderer/utils/intersection-data.h>
-#include <real-time-renderer/utils/mesh.h>
+#include <real-time-renderer/utils/primitive-model.h>
+#include <real-time-renderer/utils/shader/shader.h>
 #include <physics/ray.hpp>
 #include "material.h"
 
@@ -14,13 +16,13 @@ namespace racer
     class RendererComponent : public Component
     {
     public:
-        virtual void Rastarize() = 0;
+        virtual void Rastarize(glm::mat4, const Shader &rendering_shader) = 0;
         virtual IntersectionData RayTrace(Ray ray) = 0;
 
         Material rendering_material_;
 
-    private:
-        Mesh *renderer_mesh_;
+    protected:
+        PrimitiveModel *renderer_mesh_;
     };
 }
 

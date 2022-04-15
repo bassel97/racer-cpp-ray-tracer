@@ -1,37 +1,26 @@
 #ifndef RACER_COMPONENT_SPHERERENDERER_H_
 #define RACER_COMPONENT_SPHERERENDERER_H_
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <json.hpp>
 #include "renderer-component.h"
+#include <real-time-renderer/utils/primitive-model.h>
+#include <real-time-renderer/utils/primitive-shapes/sphere-preview-data.h>
 
 namespace racer
 {
     class SphereRendererComponent : public RendererComponent
     {
     public:
-        SphereRendererComponent() {}
-
-        SphereRendererComponent(nlohmann::json shapeData)
-        {
-            // TO-DO duplicate code to helper functions
-            auto materialData = shapeData["material"];
-            rendering_material_.color.r = materialData["color"]["r"];
-            rendering_material_.color.g = materialData["color"]["g"];
-            rendering_material_.color.b = materialData["color"]["b"];
-
-            rendering_material_.Ka = materialData["k"]["ka"];
-            rendering_material_.Kd = materialData["k"]["kd"];
-            rendering_material_.Kr = materialData["k"]["kr"];
-            rendering_material_.Ks = materialData["k"]["ks"];
-
-            rendering_material_.n = materialData["n"];
-        }
+        SphereRendererComponent();
+        SphereRendererComponent(nlohmann::json shapeData);
+        ~SphereRendererComponent();
 
         IntersectionData RayTrace(Ray ray);
 
-        void Rastarize()
-        {
-        }
+        void Rastarize(glm::mat4 VP, const Shader &rendering_shader);
     };
 }
 

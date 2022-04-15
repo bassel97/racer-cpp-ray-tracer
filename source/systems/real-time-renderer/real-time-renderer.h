@@ -29,9 +29,6 @@ namespace racer
         unsigned int texture_Colorbuffer_;
         unsigned int render_buffer_object_;
 
-        PrimitiveModel sphere_model_;
-        PrimitiveModel cube_model_;
-
         // TODO (Bassel): Replace with more advanced shader
         Shader rendering_shader_;
     };
