@@ -73,6 +73,17 @@ void racer::RealtimeRendererSystem::RenderScene(Scene *scene)
         rendering_shader_.setVec3("viewDir", glm::vec3(0, 0, -1));
 
         scene->shapesToRender[i]->Rastarize(projection * view, rendering_shader_);
+
+        if (scene->shapesToRender[i]->holdingEntity->IsActive())
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glm::vec3 temp_color = scene->shapesToRender[i]->rendering_material_.color;
+            scene->shapesToRender[i]->rendering_material_.color = glm::vec3(1.0f);
+            scene->shapesToRender[i]->Rastarize(projection * view, rendering_shader_);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            
+            scene->shapesToRender[i]->rendering_material_.color = temp_color;
+        }
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

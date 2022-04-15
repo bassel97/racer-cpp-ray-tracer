@@ -27,6 +27,16 @@ namespace racer
 
         std::string GetName() const;
 
+        bool IsActive() const
+        {
+            return is_active_;
+        }
+
+        void SetActive(bool is_active)
+        {
+            is_active_ = is_active;
+        }
+
         static std::vector<Entity *> PopulateEntities(nlohmann::json entities);
 
         template <class T>
@@ -43,9 +53,11 @@ namespace racer
             return NULL;
         }
 
+        std::set<Component *> components;
+
     private:
         std::string name;
-        std::set<Component *> components;
+        bool is_active_;
     };
 } // namespace racer
 

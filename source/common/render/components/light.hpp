@@ -9,12 +9,10 @@
 
 namespace racer
 {
-    
     class Light : public Component
     {
         public:
         glm::vec3 color;
-        //glm::vec3 position;
 
         Light()
         {
@@ -27,6 +25,11 @@ namespace racer
             color.r = positionData["r"];
             color.g = positionData["g"];
             color.b = positionData["b"];
+        }
+
+        virtual std::string GetName()
+        {
+            return "light";
         }
 
     };

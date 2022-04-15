@@ -35,6 +35,11 @@ namespace racer
 
         void ResetTransform();
 
+        virtual std::string GetName()
+        {
+            return "transform";
+        }
+
         glm::vec3 position;
         glm::vec3 rotation;
         glm::vec3 scale;

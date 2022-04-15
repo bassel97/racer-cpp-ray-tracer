@@ -1,6 +1,6 @@
 #include "entity.h"
 
-racer::Entity::Entity(std::string entityName, nlohmann::json entityData) : name(entityName)
+racer::Entity::Entity(std::string entityName, nlohmann::json entityData) : name(entityName), is_active_(false)
 {
     auto componentsData = entityData["components"];
     for (auto &componentData : componentsData.items())

@@ -38,6 +38,11 @@ namespace racer
         {
             return 2 * (float)atan ( 1 / (aspectRatio * tan ( h_fov * Rad_Deg_2 )) );
         }
+
+        virtual std::string GetName()
+        {
+            return "camera";
+        }
     };
 
 } // namespace racer

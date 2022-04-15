@@ -15,7 +15,7 @@ namespace racer
         Window &operator=(const Window &) = delete;
         ~Window();
 
-        void RenderFrame(unsigned int, unsigned int);
+        void RenderFrame(Scene *, unsigned int, unsigned int);
         void CloseWindow();
 
         void GetPreviewWindowSize(int &, int &);

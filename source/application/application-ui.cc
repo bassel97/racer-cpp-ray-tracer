@@ -1,5 +1,7 @@
 #include "application-ui.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 racer::ApplicationUI::ApplicationUI(GLFWwindow *glfw_window)
 {
     IMGUI_CHECKVERSION();
@@ -8,11 +10,13 @@ racer::ApplicationUI::ApplicationUI(GLFWwindow *glfw_window)
     (void)io;
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;     // Enable Docking
+    io->Fonts->AddFontFromFileTTF("BAHNSCHRIFT 1.TTF", 16.0f);
 
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(glfw_window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
 }
 
 racer::ApplicationUI::~ApplicationUI()
@@ -105,16 +109,6 @@ void racer::ApplicationUI::SetIMGUILayout()
     }
 
     ImGui::End();
-
-    if (ImGui::Begin("Scene Hierarchy"))
-    {
-    }
-    ImGui::End();
-
-    if (ImGui::Begin("Component Inspector"))
-    {
-    }
-    ImGui::End();
 }
 
 void racer::ApplicationUI::GetPreviewWindowSize(int &width, int &height)
@@ -158,6 +152,74 @@ void racer::ApplicationUI::RenderRenderOptionsWindow()
         ImGui::InputInt("height", &render_properties_.height);
         if (ImGui::SmallButton("Render"))
             start_render_ = true;
+    }
+    ImGui::End();
+}
+
+void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
+{
+    if (ImGui::Begin("Scene Hierarchy"))
+    {
+        if (ImGui::TreeNode("Entities"))
+        {
+            for (auto entity : scene->entities)
+            {
+                ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+                ImGuiTreeNodeFlags node_flags = base_flags;
+                const bool is_selected = entity->IsActive();
+                if (is_selected)
+                    node_flags |= ImGuiTreeNodeFlags_Selected;
+                node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+                ImGui::TreeNodeEx((void *)entity, node_flags, entity->GetName().c_str());
+                if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+                {
+                    for (auto entity_not_selected : scene->entities)
+                    {
+                        entity_not_selected->SetActive(false);
+                    }
+                    entity->SetActive(true);
+                }
+            }
+            ImGui::TreePop();
+        }
+    }
+    ImGui::End();
+
+    if (ImGui::Begin("Components Inspector"))
+    {
+        for (auto entity : scene->entities)
+        {
+            if (entity->IsActive())
+            {
+                for (auto component : entity->components)
+                {
+                    ImGui::Text(component->GetName().c_str());
+
+                    Transform *transformComponent = dynamic_cast<Transform *>(component);
+                    if (transformComponent)
+                    {
+                        ImGui::DragFloat3("Position", glm::value_ptr(transformComponent->position), 0.01f);
+                        ImGui::DragFloat3("Rotation", glm::value_ptr(transformComponent->rotation), 0.01f);
+                        ImGui::DragFloat3("Scale", glm::value_ptr(transformComponent->scale), 0.01f);
+                    }
+
+                    Light *lightComponent = dynamic_cast<Light *>(component);
+                    if (lightComponent)
+                    {
+                        ImGui::ColorEdit3("Color", glm::value_ptr(lightComponent->color));
+                    }
+
+                    Camera *cameraComponent = dynamic_cast<Camera *>(component);
+                    if (cameraComponent)
+                    {
+                        ImGui::DragFloat("horizontal FOV", &cameraComponent->h_fov, 0.01f);
+                    }
+
+                    ImGui::Separator();
+                }
+                break;
+            }
+        }
     }
     ImGui::End();
 }

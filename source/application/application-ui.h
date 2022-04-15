@@ -7,6 +7,7 @@
 #include <imgui_impl/imgui_impl_glfw.h>
 #include <imgui_impl/imgui_impl_opengl3.h>
 #include <stb_image_write.h>
+#include <scene.h>
 
 namespace racer
 {
@@ -32,6 +33,7 @@ namespace racer
         void RenderPreviewWindow(ImTextureID);
         void RenderRenderResultWindow(ImTextureID);
         void RenderRenderOptionsWindow();
+        void RenderSceneComponentHirerchy(Scene*);
 
         bool IsWindowClosed() const;
 

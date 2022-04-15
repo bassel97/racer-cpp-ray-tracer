@@ -64,7 +64,7 @@ void racer::Window::SetWindowIcon()
     stbi_image_free(images[0].pixels);
 }
 
-void racer::Window::RenderFrame(unsigned int preview_frame_id, unsigned int rendered_frame_id)
+void racer::Window::RenderFrame(Scene *scene, unsigned int preview_frame_id, unsigned int rendered_frame_id)
 {
     glfwPollEvents();
 
@@ -75,6 +75,8 @@ void racer::Window::RenderFrame(unsigned int preview_frame_id, unsigned int rend
     application_ui_->RenderPreviewWindow((ImTextureID)(intptr_t)preview_frame_id);
     application_ui_->RenderRenderResultWindow((ImTextureID)(intptr_t)rendered_frame_id);
     application_ui_->RenderRenderOptionsWindow();
+
+    application_ui_->RenderSceneComponentHirerchy(scene);
 
     application_ui_->RenderIMGUIFrame();
 

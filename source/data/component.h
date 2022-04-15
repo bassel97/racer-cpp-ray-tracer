@@ -11,14 +11,10 @@ namespace racer
     {
     public:
         Entity *holdingEntity;
-
-        virtual std::string GetName()
-        {
-            return name;
-        }
+        virtual std::string GetName() = 0;
 
     protected:
-        std::string name;
+        std::string name_;
     };
 } // namespace racer
 

@@ -21,6 +21,11 @@ namespace racer
         IntersectionData RayTrace(Ray ray);
 
         void Rastarize(glm::mat4 VP, const Shader &rendering_shader);
+
+        virtual std::string GetName()
+        {
+            return "camera";
+        }
     };
 }
 

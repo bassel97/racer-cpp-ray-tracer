@@ -16,7 +16,7 @@ int racer::Application::Run()
 
     Scene *active_scene;
 
-    std::ifstream startupFile("start-up.json");
+    std::ifstream startupFile("D:\\Personal_Projects\\racer-cpp-ray-tracer\\build\\Debug\\start-up.json");
     if (!startupFile.fail())
     {
         nlohmann::json jsonData;
@@ -28,18 +28,6 @@ int racer::Application::Run()
     {
         active_scene = (new Scene("Empty Scene"));
     }
-
-    // unsigned char *pixels = new unsigned char[3 * scenes[i]->screen.width * scenes[i]->screen.height];
-
-    // previewSystem::OnlineRenderSystem onlineRenderSystem(scenes[i]);
-
-    /*OfflineRenderSystem offlineRenderSystem;
-    offlineRenderSystem.RenderScene(scenes[i], pixels);
-
-    stbi_write_png((scenes[i]->name + ".png").c_str(), scenes[i]->screen.width, scenes[i]->screen.height, 3, pixels, scenes[i]->screen.width * 3);
-    */
-
-    // return 0;
 
     RenderProperties render_properties;
 
@@ -71,7 +59,7 @@ int racer::Application::Run()
             window_.FinishedRayTracing();
         }
 
-        window_.RenderFrame(real_time_renderer_system_.frame_buffer_, texture);
+        window_.RenderFrame(active_scene, real_time_renderer_system_.frame_buffer_, texture);
     }
 
     return 0;
