@@ -13,10 +13,7 @@ racer::Application::~Application()
 
 int racer::Application::Run()
 {
-
-    Scene *active_scene;
-
-    std::ifstream startupFile("start-up.json");
+    /*std::ifstream startupFile("start-up.json");
     if (!startupFile.fail())
     {
         nlohmann::json jsonData;
@@ -25,9 +22,10 @@ int racer::Application::Run()
         active_scene = new Scene(jsonData["name"], jsonData["data"]);
     }
     else
-    {
-        active_scene = (new Scene("Empty Scene"));
-    }
+    {*/
+    // active_scene_ = new Scene("Empty Scene");
+    active_scene_ = SceneImporter::ImportSceneWithFilePath("start-up.json");
+    //}
 
     RenderProperties render_properties;
 
@@ -44,24 +42,27 @@ int racer::Application::Run()
         window_.GetPreviewWindowSize(width, height);
         real_time_renderer_system_.ResizeTexture(width, height);
 
-        real_time_renderer_system_.RenderScene(active_scene);
-
-        if (window_.RayTraceRender(render_properties))
+        if (active_scene_->active_camera_ != NULL)
         {
-            unsigned char *pixels = new unsigned char[3 * render_properties.width * render_properties.height];
-            ray_tracing_renderer_system_.RenderScene(active_scene, pixels, render_properties.width, render_properties.height);
-            stbi_write_png((active_scene->name + ".png").c_str(), render_properties.width, render_properties.height, 3, pixels, render_properties.width * 3);
+            real_time_renderer_system_.RenderScene(active_scene_);
 
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, render_properties.width, render_properties.height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-            glGenerateMipmap(GL_TEXTURE_2D);
+            if (window_.RayTraceRender(render_properties))
+            {
+                unsigned char *pixels = new unsigned char[3 * render_properties.width * render_properties.height];
+                ray_tracing_renderer_system_.RenderScene(active_scene_, pixels, render_properties.width, render_properties.height);
+                stbi_write_png((active_scene_->name_ + ".png").c_str(), render_properties.width, render_properties.height, 3, pixels, render_properties.width * 3);
 
-            window_.FinishedRayTracing();
+                glBindTexture(GL_TEXTURE_2D, texture);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, render_properties.width, render_properties.height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+                glGenerateMipmap(GL_TEXTURE_2D);
 
-            delete pixels;
+                window_.FinishedRayTracing();
+
+                delete pixels;
+            }
         }
 
-        window_.RenderFrame(active_scene, real_time_renderer_system_.frame_buffer_, texture);
+        window_.RenderFrame(active_scene_, real_time_renderer_system_.frame_buffer_, texture);
     }
 
     return 0;

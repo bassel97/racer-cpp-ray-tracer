@@ -121,8 +121,8 @@ void racer::ApplicationUI::RenderPreviewWindow(ImTextureID im_texture_id)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     if (ImGui::Begin("Preview Window", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
     {
-        preview_window_width_ = ImGui::GetContentRegionAvail().x;
-        preview_window_height_ = ImGui::GetContentRegionAvail().y;
+        preview_window_width_ = static_cast<int>(ImGui::GetContentRegionAvail().x);
+        preview_window_height_ = static_cast<int>(ImGui::GetContentRegionAvail().y);
 
         ImGui::Image(im_texture_id, ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
     }
@@ -136,7 +136,7 @@ void racer::ApplicationUI::RenderRenderResultWindow(ImTextureID im_texture_id)
     if (ImGui::Begin("Render Result", NULL, ImGuiWindowFlags_HorizontalScrollbar))
     {
         ImGuiIO &io = ImGui::GetIO();
-        ImGui::Image(im_texture_id, ImVec2(render_properties_.width, render_properties_.height));
+        ImGui::Image(im_texture_id, ImVec2(static_cast<float>(render_properties_.width), static_cast<float>(render_properties_.height)));
     }
     ImGui::End();
     ImGui::PopStyleVar();
@@ -159,9 +159,9 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
 {
     if (ImGui::Begin("Scene Hierarchy"))
     {
-        if (ImGui::TreeNode("Entities"))
+        if (ImGui::TreeNode(("Entities (" + scene->name_ + ")").c_str()))
         {
-            for (auto entity : scene->entities)
+            for (auto entity : scene->entities_)
             {
                 ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
                 ImGuiTreeNodeFlags node_flags = base_flags;
@@ -172,7 +172,7 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
                 ImGui::TreeNodeEx((void *)entity, node_flags, entity->GetName().c_str());
                 if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
                 {
-                    for (auto entity_not_selected : scene->entities)
+                    for (auto entity_not_selected : scene->entities_)
                     {
                         entity_not_selected->SetActive(false);
                     }
@@ -186,32 +186,32 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
 
     if (ImGui::Begin("Components Inspector"))
     {
-        for (auto entity : scene->entities)
+        for (auto entity : scene->entities_)
         {
             if (entity->IsActive())
             {
-                for (auto component : entity->components)
+                for (auto component : entity->components_)
                 {
                     ImGui::Text(component->GetName().c_str());
 
                     Transform *transformComponent = dynamic_cast<Transform *>(component);
                     if (transformComponent)
                     {
-                        ImGui::DragFloat3("Position", glm::value_ptr(transformComponent->position), 0.01f);
-                        ImGui::DragFloat3("Rotation", glm::value_ptr(transformComponent->rotation), 0.01f);
-                        ImGui::DragFloat3("Scale", glm::value_ptr(transformComponent->scale), 0.01f);
+                        ImGui::DragFloat3("Position", glm::value_ptr(transformComponent->position_), 0.01f);
+                        ImGui::DragFloat3("Rotation", glm::value_ptr(transformComponent->rotation_), 0.01f);
+                        ImGui::DragFloat3("Scale", glm::value_ptr(transformComponent->scale_), 0.01f);
                     }
 
                     Light *lightComponent = dynamic_cast<Light *>(component);
                     if (lightComponent)
                     {
-                        ImGui::ColorEdit3("Color", glm::value_ptr(lightComponent->color));
+                        ImGui::ColorEdit3("Color", glm::value_ptr(lightComponent->color_));
                     }
 
                     Camera *cameraComponent = dynamic_cast<Camera *>(component);
                     if (cameraComponent)
                     {
-                        ImGui::DragFloat("Horizontal FOV", &cameraComponent->h_fov, 0.01f);
+                        ImGui::DragFloat("Horizontal FOV", &cameraComponent->h_fov_, 0.01f);
                     }
 
                     RendererComponent *rendererComponentComponent = dynamic_cast<RendererComponent *>(component);

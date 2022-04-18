@@ -5,42 +5,37 @@
 #include <set>
 #include <vector>
 
-#include <json.hpp>
-
 #include <entity.h>
 
 #include <utilities/window/screen.hpp>
 
 #include <components/renderer/renderer-component.h>
-#include <render/components/light.hpp>
-#include <render/components/camera.hpp>
+#include <components/light.h>
+#include <components/camera.h>
 
 namespace racer
 {
     class Scene
     {
-
     public:
-        Scene(std::string name);
-        Scene(std::string name, nlohmann::json sceneData);
+        Scene(std::string = "");
+        Scene(const Scene &) = delete;
+        Scene &operator=(const Scene &) = delete;
+        ~Scene();
 
         void AddEntity(Entity *entity);
         void RemoveEntity(Entity *entity);
         int GetEntitiesCount() const
         {
-            return static_cast<int>(entities.size());
+            return static_cast<int>(entities_.size());
         }
-        static std::vector<Scene *> PopulateScenes(nlohmann::json scenes);
 
-        std::string name;
-        std::set<Entity *> entities;
-
-        std::vector<RendererComponent *> shapesToRender;
-        std::vector<Light *> ligths;
-        std::vector<Camera *> cameras;
-        Camera *activeCamera;
-
-        glm::vec3 environmentColor;
+        std::vector<RendererComponent *> shapes_to_render_;
+        std::vector<Light *> ligths_;
+        std::set<Entity *> entities_;
+        Camera *active_camera_;
+        glm::vec3 environment_color_;
+        std::string name_;
     };
 } // namespace racer
 

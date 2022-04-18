@@ -53,36 +53,36 @@ void racer::RealtimeRendererSystem::RenderScene(Scene *scene)
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_);
     glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 
-    glClearColor(scene->environmentColor.r, scene->environmentColor.g, scene->environmentColor.b, 1.0f);
+    glClearColor(scene->environment_color_.r, scene->environment_color_.g, scene->environment_color_.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     glm::mat4 projection = glm::perspective(
-        (scene->activeCamera->GetVFov((float)render_frame_width_ / (float)render_frame_height_)), ((float)render_frame_width_ / (float)render_frame_height_), 0.1f, 100.0f);
+        (scene->active_camera_->GetVFov((float)render_frame_width_ / (float)render_frame_height_)), ((float)render_frame_width_ / (float)render_frame_height_), 0.1f, 100.0f);
 
     // camera/view transformation
-    glm::mat4 view = glm::lookAt(scene->activeCamera->holdingEntity->transform->position,
-                                 scene->activeCamera->holdingEntity->transform->position + glm::vec3(0, 0, -1),
+    glm::mat4 view = glm::lookAt(scene->active_camera_->holdingEntity->transform->position_,
+                                 scene->active_camera_->holdingEntity->transform->position_ + glm::vec3(0, 0, -1),
                                  glm::vec3(0, 1, 0));
 
-    for (int i = 0; i < scene->shapesToRender.size(); i++)
+    for (int i = 0; i < scene->shapes_to_render_.size(); i++)
     {
         rendering_shader_.use();
 
         rendering_shader_.setVec3("viewDir", glm::vec3(0, 0, -1));
 
-        scene->shapesToRender[i]->Rastarize(projection * view, rendering_shader_);
+        scene->shapes_to_render_[i]->Rastarize(projection * view, rendering_shader_);
 
-        if (scene->shapesToRender[i]->holdingEntity->IsActive())
+        if (scene->shapes_to_render_[i]->holdingEntity->IsActive())
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            glm::vec3 temp_color = scene->shapesToRender[i]->rendering_material_.color;
-            scene->shapesToRender[i]->rendering_material_.color = glm::vec3(1.0f);
-            scene->shapesToRender[i]->Rastarize(projection * view, rendering_shader_);
+            glm::vec3 temp_color = scene->shapes_to_render_[i]->rendering_material_.color;
+            scene->shapes_to_render_[i]->rendering_material_.color = glm::vec3(1.0f);
+            scene->shapes_to_render_[i]->Rastarize(projection * view, rendering_shader_);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             
-            scene->shapesToRender[i]->rendering_material_.color = temp_color;
+            scene->shapes_to_render_[i]->rendering_material_.color = temp_color;
         }
     }
 

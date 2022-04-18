@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <json.hpp>
 #include "renderer-component.h"
 #include <real-time-renderer/utils/primitive-model.h>
 #include <real-time-renderer/utils/primitive-shapes/sphere-preview-data.h>
@@ -15,7 +14,6 @@ namespace racer
     {
     public:
         SphereRendererComponent();
-        SphereRendererComponent(nlohmann::json shapeData);
         ~SphereRendererComponent();
 
         IntersectionData RayTrace(Ray ray);

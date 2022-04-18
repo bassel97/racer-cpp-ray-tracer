@@ -5,7 +5,7 @@ void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned
     this->scene = sceneToRender;
 
     float aspectRatio = (float)width / height;
-    float fov_correction = static_cast<float>(tan(scene->activeCamera->GetVFov(aspectRatio) / 2.0));
+    float fov_correction = static_cast<float>(tan(scene->active_camera_->GetVFov(aspectRatio) / 2.0));
 
     for (int i = 0; i < height; i++)
     {
@@ -13,10 +13,10 @@ void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned
         {
             float u = (2.0f * ((static_cast<float>(k) + 0.5f) / width) - 1.0f) * aspectRatio * fov_correction;
             float v = (1.0f - 2.0f * ((static_cast<float>(i) + 0.5f) / height)) * fov_correction;
-            float d = -scene->activeCamera->nearPlane;
+            float d = -scene->active_camera_->near_plane_;
 
             glm::vec3 direction = {u, v, d};
-            glm::vec3 cameraOrigin = scene->activeCamera->holdingEntity->transform->position;
+            glm::vec3 cameraOrigin = scene->active_camera_->holdingEntity->transform->position_;
             glm::vec3 pixelColor = GetPixelColor(cameraOrigin, direction, 0);
 
             pixels[i * width * 3 + k * 3] = (char)(pixelColor.r * 255);
@@ -34,7 +34,7 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
     glm::vec3 pixelColor = {0, 0, 0};
     if (recursionLevel == 0)
     {
-        pixelColor = scene->environmentColor;
+        pixelColor = scene->environment_color_;
     }
 
     double tmin = 10000000;
@@ -42,9 +42,9 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
     IntersectionData nearIntersectedSphereData;
     RendererComponent *nearShape;
 
-    for (size_t shapeIndex = 0; shapeIndex < scene->shapesToRender.size(); shapeIndex++)
+    for (size_t shapeIndex = 0; shapeIndex < scene->shapes_to_render_.size(); shapeIndex++)
     {
-        racer::IntersectionData intersectionData = scene->shapesToRender[shapeIndex]->RayTrace(racer::Ray(origin, direction));
+        racer::IntersectionData intersectionData = scene->shapes_to_render_[shapeIndex]->RayTrace(racer::Ray(origin, direction));
 
         if (intersectionData.intersected)
         {
@@ -55,26 +55,26 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
 
                 nearIntersectedSphereData = intersectionData;
 
-                nearShape = scene->shapesToRender[shapeIndex];
+                nearShape = scene->shapes_to_render_[shapeIndex];
             }
         }
     }
 
     if (intersected)
     {
-        pixelColor = nearShape->rendering_material_.Ka * scene->environmentColor * nearShape->rendering_material_.color;
+        pixelColor = nearShape->rendering_material_.Ka * scene->environment_color_ * nearShape->rendering_material_.color;
 
-        for (size_t lightIndex = 0; lightIndex < scene->ligths.size(); lightIndex++)
+        for (size_t lightIndex = 0; lightIndex < scene->ligths_.size(); lightIndex++)
         {
-            glm::vec3 L = glm::normalize(scene->ligths[lightIndex]->holdingEntity->transform->position - nearIntersectedSphereData.pointOfIntersection);
+            glm::vec3 L = glm::normalize(scene->ligths_[lightIndex]->holdingEntity->transform->position_ - nearIntersectedSphereData.pointOfIntersection);
 
             bool shadowed = false;
-            for (size_t otherSphereIndex = 0; otherSphereIndex < scene->shapesToRender.size(); otherSphereIndex++)
+            for (size_t otherSphereIndex = 0; otherSphereIndex < scene->shapes_to_render_.size(); otherSphereIndex++)
             {
-                if (!scene->shapesToRender[otherSphereIndex]->holdingEntity->GetName()._Equal(nearShape->holdingEntity->GetName()))
+                if (!scene->shapes_to_render_[otherSphereIndex]->holdingEntity->GetName()._Equal(nearShape->holdingEntity->GetName()))
                 {
 
-                    racer::IntersectionData shadowIntersection = scene->shapesToRender[otherSphereIndex]->RayTrace(racer::Ray(nearIntersectedSphereData.pointOfIntersection, L));
+                    racer::IntersectionData shadowIntersection = scene->shapes_to_render_[otherSphereIndex]->RayTrace(racer::Ray(nearIntersectedSphereData.pointOfIntersection, L));
 
                     if (shadowIntersection.intersected && shadowIntersection.t > 0.01f)
                     {
@@ -88,7 +88,7 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
 
             float NdolL = std::max(0.0f, (nearIntersectedSphereData.normalToIntersection.x * L.x + nearIntersectedSphereData.normalToIntersection.y * L.y + nearIntersectedSphereData.normalToIntersection.z * L.z));
 
-            pixelColor += nearShape->rendering_material_.Kd * scene->ligths[lightIndex]->color * NdolL * nearShape->rendering_material_.color;
+            pixelColor += nearShape->rendering_material_.Kd * scene->ligths_[lightIndex]->color_ * NdolL * nearShape->rendering_material_.color;
 
             glm::vec3 view = glm::normalize(origin - nearIntersectedSphereData.pointOfIntersection);
 
@@ -96,7 +96,7 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
 
             double RdotV = std::max(0.0f, (r.x * view.x + r.y * view.y + r.z * view.z));
 
-            pixelColor += scene->ligths[lightIndex]->color * nearShape->rendering_material_.Ks * (float)std::pow(RdotV, nearShape->rendering_material_.n);
+            pixelColor += scene->ligths_[lightIndex]->color_ * nearShape->rendering_material_.Ks * (float)std::pow(RdotV, nearShape->rendering_material_.n);
         }
 
         glm::vec3 view = glm::normalize(origin - nearIntersectedSphereData.pointOfIntersection);

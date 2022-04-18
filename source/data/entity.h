@@ -5,20 +5,21 @@
 #include <set>
 #include <string>
 
-#include <json.hpp>
-
 #include <component.h>
 #include <components/transform.h>
 #include <components/renderer/sphere-renderer.h>
-#include <render/components/camera.hpp>
-#include <render/components/light.hpp>
+#include <components/camera.h>
+#include <components/light.h>
 
 namespace racer
 {
     class Entity
     {
     public:
-        Entity(std::string, nlohmann::json);
+        Entity(std::string = "");
+        Entity(const Entity &) = delete;
+        Entity &operator=(const Entity &) = delete;
+        ~Entity();
 
         Transform *transform;
 
@@ -37,8 +38,6 @@ namespace racer
             is_active_ = is_active;
         }
 
-        static std::vector<Entity *> PopulateEntities(nlohmann::json entities);
-
         template <class T>
         T *GetComponent()
         {
@@ -53,10 +52,10 @@ namespace racer
             return NULL;
         }
 
-        std::set<Component *> components;
+        std::set<Component *> components_;
 
     private:
-        std::string name;
+        std::string name_;
         bool is_active_;
     };
 } // namespace racer

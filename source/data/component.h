@@ -10,8 +10,12 @@ namespace racer
     class Component
     {
     public:
-        Entity *holdingEntity;
+        Component()
+        {
+        }
         virtual std::string GetName() = 0;
+
+        Entity *holdingEntity;
 
     protected:
         std::string name_;

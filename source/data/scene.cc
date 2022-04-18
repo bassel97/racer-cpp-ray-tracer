@@ -1,69 +1,25 @@
 #include "scene.h"
 
-racer::Scene::Scene(std::string name) : name(name)
+racer::Scene::Scene(std::string name)
+    : name_(name), environment_color_(glm::vec3(0.6666f)), active_camera_(NULL)
 {
-    environmentColor.r = 0.666666f;
-    environmentColor.g = 0.666666f;
-    environmentColor.b = 0.666666f;
-
-    nlohmann::json emptyCameraData;
-    Entity *cameraEntity = new Entity("Camera", emptyCameraData);
-
-    Camera *cameraComponent = new Camera();
-    cameraEntity->AddComponent(cameraComponent);
-
-    Transform *transformComponent = new Transform();
-    cameraEntity->AddComponent(transformComponent);
-    cameraEntity->transform = transformComponent;
-
-    activeCamera = cameraComponent;
 }
 
-racer::Scene::Scene(std::string name, nlohmann::json sceneData) : name(name)
+racer::Scene::~Scene()
 {
-    std::vector<Entity *> entitiesVector = Entity::PopulateEntities(sceneData["entities"]);
-    for (auto &entity : entitiesVector)
+    for (auto entity : entities_)
     {
-        AddEntity(entity);
-
-        Camera *cameraComponent = entity->GetComponent<Camera>();
-        if (cameraComponent != NULL)
-        {
-            cameras.push_back(cameraComponent);
-            activeCamera = cameraComponent;
-        }
-
-        RendererComponent *shapeComponent = entity->GetComponent<RendererComponent>();
-        if (shapeComponent != NULL)
-            shapesToRender.push_back(shapeComponent);
-
-        Light *lightComponent = entity->GetComponent<Light>();
-        if (lightComponent != NULL)
-            ligths.push_back(lightComponent);
+        delete entity;
     }
-    
-    environmentColor.r = sceneData["scene-properties"]["environment-color"]["r"];
-    environmentColor.g = sceneData["scene-properties"]["environment-color"]["g"];
-    environmentColor.b = sceneData["scene-properties"]["environment-color"]["b"];
+    entities_.clear();
 }
 
 void racer::Scene::AddEntity(Entity *entity)
 {
-    entities.insert(entity);
+    entities_.insert(entity);
 }
 
 void racer::Scene::RemoveEntity(Entity *entity)
 {
-    entities.erase(entity);
-}
-
-std::vector<racer::Scene *> racer::Scene::PopulateScenes(nlohmann::json scenes)
-{
-    std::vector<Scene *> scenesVector;
-    for (auto &sceneData : scenes.items())
-    {
-        Scene *scene = new Scene(sceneData.key(), sceneData.value());
-        scenesVector.push_back(scene);
-    }
-    return scenesVector;
+    entities_.erase(entity);
 }

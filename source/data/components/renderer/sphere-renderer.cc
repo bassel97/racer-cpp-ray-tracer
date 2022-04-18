@@ -7,24 +7,6 @@ racer::SphereRendererComponent::SphereRendererComponent()
     renderer_mesh_ = new PrimitiveModel(kSphereObjDataFile);
 }
 
-racer::SphereRendererComponent::SphereRendererComponent(nlohmann::json shapeData)
-{
-    renderer_mesh_ = new PrimitiveModel(kSphereObjDataFile);
-
-    // TO-DO duplicate code to helper functions
-    auto materialData = shapeData["material"];
-    rendering_material_.color.r = materialData["color"]["r"];
-    rendering_material_.color.g = materialData["color"]["g"];
-    rendering_material_.color.b = materialData["color"]["b"];
-
-    rendering_material_.Ka = materialData["k"]["ka"];
-    rendering_material_.Kd = materialData["k"]["kd"];
-    rendering_material_.Kr = materialData["k"]["kr"];
-    rendering_material_.Ks = materialData["k"]["ks"];
-
-    rendering_material_.n = materialData["n"];
-}
-
 racer::SphereRendererComponent::~SphereRendererComponent()
 {
     delete renderer_mesh_;
@@ -32,9 +14,9 @@ racer::SphereRendererComponent::~SphereRendererComponent()
 
 racer::IntersectionData racer::SphereRendererComponent::RayTrace(Ray ray)
 {
-    ray.origin = (ray.origin - holdingEntity->transform->position) / holdingEntity->transform->scale;
+    ray.origin = (ray.origin - holdingEntity->transform->position_) / holdingEntity->transform->scale_;
 
-    glm::vec3 scaledDirection = ray.direction / holdingEntity->transform->scale;
+    glm::vec3 scaledDirection = ray.direction / holdingEntity->transform->scale_;
 
     float A = glm::dot(scaledDirection, scaledDirection);
 
@@ -56,11 +38,11 @@ racer::IntersectionData racer::SphereRendererComponent::RayTrace(Ray ray)
 
     glm::vec3 point = ray.origin + t * scaledDirection;
 
-    glm::vec3 normal = point / holdingEntity->transform->scale;
+    glm::vec3 normal = point / holdingEntity->transform->scale_;
 
     normal = glm::normalize(normal);
 
-    glm::vec3 pointOfIntersection = (point * holdingEntity->transform->scale) + holdingEntity->transform->position;
+    glm::vec3 pointOfIntersection = (point * holdingEntity->transform->scale_) + holdingEntity->transform->position_;
 
     glm::vec3 normalToIntersection = normal;
 
@@ -71,8 +53,8 @@ void racer::SphereRendererComponent::Rastarize(glm::mat4 VP, const Shader &rende
 {
     // calculate the model matrix for each object and pass it to shader before drawing
     glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    model = glm::translate(model, holdingEntity->transform->position);
-    model = glm::scale(model, holdingEntity->transform->scale);
+    model = glm::translate(model, holdingEntity->transform->position_);
+    model = glm::scale(model, holdingEntity->transform->scale_);
 
     rendering_shader.setVec3("color", rendering_material_.color);
 

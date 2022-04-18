@@ -31,6 +31,8 @@ set(SourceCode
     source/application/window.cc
     source/application/application-ui.cc
 
+    source/io/scene-importer.cc
+
     source/data/scene.cc
     source/data/component.cc
     source/data/entity.cc
@@ -44,11 +46,12 @@ set(SourceCode
     )
 
 # add the executable
-add_executable(RACER WIN32 source/main.cc resources.rc ${VENDOR_SOURCES} ${SourceCode})
+add_executable(RACER source/main.cc resources.rc ${VENDOR_SOURCES} ${SourceCode})
 
 # Source Libraries
 target_include_directories(RACER PUBLIC
     source/application
+    source/io
     source/common
     source/data
     source/game

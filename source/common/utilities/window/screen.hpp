@@ -1,7 +1,5 @@
 #pragma once
 
-#include <json.hpp>
-
 namespace racer
 {
     class Screen
@@ -19,18 +17,18 @@ namespace racer
         {
         }
 
-        Screen(nlohmann::json screenData)
+        /*Screen(nlohmann::json screenData)
         {
             SetScreen(screenData);
-        }
+        }*/
 
-        void SetScreen(nlohmann::json screenData)
+        /*void SetScreen(nlohmann::json screenData)
         {
             width = screenData["width"];
             height = screenData["height"];
 
             aspectRatio = (float)width / height;
-        }
+        }*/
 
         void SetScreen(int width, int height)
         {
