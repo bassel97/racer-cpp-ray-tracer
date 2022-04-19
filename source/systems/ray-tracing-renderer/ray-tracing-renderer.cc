@@ -5,17 +5,23 @@ void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned
     this->scene = sceneToRender;
 
     float aspectRatio = (float)width / height;
-    float fov_correction = static_cast<float>(tan(scene->active_camera_->GetVFov(aspectRatio) / 2.0));
+    float fov_correction = static_cast<float>(tan(scene->active_camera_->GetTanFOV() / 2.0f));
+
+    glm::mat4 camera_rotation_matrix = scene->active_camera_->holdingEntity->transform->GetRotationMatrix();
 
     for (int i = 0; i < height; i++)
     {
         for (int k = 0; k < width; k++)
         {
-            float u = (2.0f * ((static_cast<float>(k) + 0.5f) / width) - 1.0f) * aspectRatio * fov_correction;
-            float v = (1.0f - 2.0f * ((static_cast<float>(i) + 0.5f) / height)) * fov_correction;
-            float d = -scene->active_camera_->near_plane_;
+            float u = (2.0f * ((static_cast<float>(k) + 0.5f) / width) - 1.0f) * fov_correction;
+            float v = (1.0f - 2.0f * ((static_cast<float>(i) + 0.5f) / height)) * (fov_correction / aspectRatio);
+            float d = -1;
 
             glm::vec3 direction = {u, v, d};
+
+            glm::vec4 direction_rotated = camera_rotation_matrix * glm::vec4(direction, 1.0f);
+            direction = glm::vec3(direction_rotated);
+
             glm::vec3 cameraOrigin = scene->active_camera_->holdingEntity->transform->position_;
             glm::vec3 pixelColor = GetPixelColor(cameraOrigin, direction, 0);
 

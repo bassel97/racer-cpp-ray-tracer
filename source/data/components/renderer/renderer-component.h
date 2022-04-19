@@ -2,6 +2,9 @@
 #define RACER_COMPONENT_RENDERER_H_
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <component.h>
 #include <ray-tracing-renderer/utils/intersection-data.h>
 #include <real-time-renderer/utils/primitive-model.h>

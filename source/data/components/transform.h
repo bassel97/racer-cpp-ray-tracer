@@ -2,6 +2,7 @@
 #define RACER_COMPONENT_TRANSFORM_H_
 
 #include <glm/glm.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <component.h>
 
 namespace racer
@@ -12,6 +13,7 @@ namespace racer
         Transform(glm::vec3 = glm::vec3(0.0), glm::vec3 = glm::vec3(0.0), glm::vec3 = glm::vec3(0.0));
 
         void ResetTransform();
+        glm::mat4 GetRotationMatrix();
 
         virtual std::string GetName()
         {

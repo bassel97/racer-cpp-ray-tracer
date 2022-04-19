@@ -52,19 +52,20 @@ void racer::RealtimeRendererSystem::RenderScene(Scene *scene)
     // bind to framebuffer and draw scene as we normally would to color texture
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_);
     glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
+    glDepthFunc(GL_LEQUAL);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     glClearColor(scene->environment_color_.r, scene->environment_color_.g, scene->environment_color_.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    glm::mat4 projection = glm::perspective(
-        (scene->active_camera_->GetVFov((float)render_frame_width_ / (float)render_frame_height_)), ((float)render_frame_width_ / (float)render_frame_height_), 0.1f, 100.0f);
+    glm::mat4 projection = scene->active_camera_->GetProjectionMatrix(render_frame_width_, render_frame_height_);
 
     // camera/view transformation
-    glm::mat4 view = glm::lookAt(scene->active_camera_->holdingEntity->transform->position_,
-                                 scene->active_camera_->holdingEntity->transform->position_ + glm::vec3(0, 0, -1),
-                                 glm::vec3(0, 1, 0));
+    glm::mat4 view = scene->active_camera_->GetViewMatrix();
 
     for (int i = 0; i < scene->shapes_to_render_.size(); i++)
     {
@@ -81,7 +82,7 @@ void racer::RealtimeRendererSystem::RenderScene(Scene *scene)
             scene->shapes_to_render_[i]->rendering_material_.color = glm::vec3(1.0f);
             scene->shapes_to_render_[i]->Rastarize(projection * view, rendering_shader_);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            
+
             scene->shapes_to_render_[i]->rendering_material_.color = temp_color;
         }
     }

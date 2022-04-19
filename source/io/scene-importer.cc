@@ -40,7 +40,7 @@ racer::Scene *racer::SceneImporter::ImportScene(nlohmann::json scene_data)
             if (component_data.key()._Equal("camera"))
             {
                 Camera *camera = new Camera(
-                    component_data.value()["h_fov"], component_data.value()["near-plane"], component_data.value()["far-plane"]);
+                    component_data.value()["fov-y"], component_data.value()["near-plane"], component_data.value()["far-plane"]);
                 entity->AddComponent(camera);
                 new_scene->active_camera_ = camera;
                 continue;
@@ -63,6 +63,26 @@ racer::Scene *racer::SceneImporter::ImportScene(nlohmann::json scene_data)
                 sphereRendererComponent->rendering_material_.n = component_data.value()["material"]["n"];
                 entity->AddComponent(sphereRendererComponent);
                 new_scene->shapes_to_render_.push_back(sphereRendererComponent);
+                continue;
+            }
+
+            if (component_data.key()._Equal("triangle-renderer"))
+            {
+                TriangleRendererComponent *triangleRendererComponent = new TriangleRendererComponent();
+
+                triangleRendererComponent->rendering_material_.color = glm::vec3(
+                    component_data.value()["material"]["color"]["r"],
+                    component_data.value()["material"]["color"]["g"],
+                    component_data.value()["material"]["color"]["b"]);
+
+                triangleRendererComponent->rendering_material_.Ka = component_data.value()["material"]["k"]["ka"];
+                triangleRendererComponent->rendering_material_.Kd = component_data.value()["material"]["k"]["kd"];
+                triangleRendererComponent->rendering_material_.Kr = component_data.value()["material"]["k"]["kr"];
+                triangleRendererComponent->rendering_material_.Ks = component_data.value()["material"]["k"]["ks"];
+
+                triangleRendererComponent->rendering_material_.n = component_data.value()["material"]["n"];
+                entity->AddComponent(triangleRendererComponent);
+                new_scene->shapes_to_render_.push_back(triangleRendererComponent);
                 continue;
             }
 

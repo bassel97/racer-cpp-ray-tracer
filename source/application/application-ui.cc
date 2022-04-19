@@ -211,7 +211,7 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
                     Camera *cameraComponent = dynamic_cast<Camera *>(component);
                     if (cameraComponent)
                     {
-                        ImGui::DragFloat("Horizontal FOV", &cameraComponent->h_fov_, 0.01f);
+                        ImGui::DragFloat("Horizontal FOV", &cameraComponent->fov_y_, 0.01f);
                     }
 
                     RendererComponent *rendererComponentComponent = dynamic_cast<RendererComponent *>(component);

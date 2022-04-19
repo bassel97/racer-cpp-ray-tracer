@@ -5,7 +5,7 @@
 
 namespace racer
 {
-    const std::string cubeObjDataFile =
+    const std::string kCubeObjDataFile =
         "o Cube\n"
         "v 1.000000 1.000000 -1.000000\n"
         "v 1.000000 -1.000000 -1.000000\n"

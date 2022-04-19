@@ -13,3 +13,9 @@ void racer::Transform::ResetTransform()
     rotation_ = glm::vec3(0.0);
     scale_ = glm::vec3(0.0);
 }
+
+glm::mat4 racer::Transform::GetRotationMatrix()
+{
+    // camera/view transformation
+    return glm::yawPitchRoll(rotation_.y, rotation_.x, rotation_.z);
+}

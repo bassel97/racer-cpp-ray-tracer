@@ -9,10 +9,6 @@
 
 #include <utilities/window/screen.hpp>
 
-#include <components/renderer/renderer-component.h>
-#include <components/light.h>
-#include <components/camera.h>
-
 namespace racer
 {
     class Scene
