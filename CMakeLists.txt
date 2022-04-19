@@ -38,8 +38,10 @@ set(SourceCode
     source/data/entity.cc
 
     source/data/components/transform.cc
+    source/data/components/camera.cc
     source/data/components/renderer/renderer-component.cc
     source/data/components/renderer/sphere-renderer.cc
+    source/data/components/renderer/triangle-renderer.cc
 
     source/systems/real-time-renderer/real-time-renderer.cc
     source/systems/ray-tracing-renderer/ray-tracing-renderer.cc
