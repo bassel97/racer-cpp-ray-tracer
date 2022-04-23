@@ -1,0 +1,249 @@
+{
+    "name": "main-scene",
+    "data": {
+        "scene-properties": {
+            "screen": {
+                "width": 256,
+                "height": 256
+            },
+            "environment-color": {
+                "r": 0.5,
+                "g": 0.3,
+                "b": 1.0
+            }
+        },
+        "entities": {
+            "Camera": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
+                        }
+                    },
+                    "camera": {
+                        "near-plane": 1,
+                        "far-plane": 1000,
+                        "fov-y": 90
+                    }
+                }
+            },
+            "Monkey": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": -10
+                        },
+                        "rotation": {
+                            "x": -2,
+                            "y": 0.5,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 3,
+                            "y": 3,
+                            "z": 3
+                        }
+                    },
+                    "model-renderer": {
+                        "path": "monkey.fbx",
+                        "material": {
+                            "color": {
+                                "r": 0.15,
+                                "g": 0.15,
+                                "b": 0.85
+                            },
+                            "k": {
+                                "ka": 1,
+                                "kd": 1,
+                                "ks": 0,
+                                "kr": 1
+                            },
+                            "n": 50
+                        }
+                    }
+                }
+            },
+            "Sphere 2": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": 4,
+                            "y": 4,
+                            "z": -10
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 2,
+                            "z": 1
+                        }
+                    },
+                    "triangle-renderer": {
+                        "material": {
+                            "color": {
+                                "r": 0.0,
+                                "g": 1.0,
+                                "b": 0.0
+                            },
+                            "k": {
+                                "ka": 1,
+                                "kd": 1,
+                                "ks": 0.9,
+                                "kr": 0
+                            },
+                            "n": 50
+                        }
+                    }
+                }
+            },
+            "Sphere 3": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": -4,
+                            "y": 2,
+                            "z": -10
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 2,
+                            "z": 1
+                        }
+                    },
+                    "sphere-renderer": {
+                        "material": {
+                            "color": {
+                                "r": 0.0,
+                                "g": 0.0,
+                                "b": 0.5
+                            },
+                            "k": {
+                                "ka": 1,
+                                "kd": 1,
+                                "ks": 0.9,
+                                "kr": 0
+                            },
+                            "n": 50
+                        }
+                    }
+                }
+            },
+            "Sphere 4": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": -6,
+                            "y": 2,
+                            "z": -10
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 2,
+                            "z": 1
+                        }
+                    },
+                    "sphere-renderer": {
+                        "material": {
+                            "color": {
+                                "r": 0.25,
+                                "g": 0.0,
+                                "b": 0.25
+                            },
+                            "k": {
+                                "ka": 1,
+                                "kd": 1,
+                                "ks": 0.9,
+                                "kr": 0
+                            },
+                            "n": 50
+                        }
+                    }
+                }
+            },
+            "Light 2": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": 10,
+                            "y": 10,
+                            "z": -10
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
+                        }
+                    },
+                    "light": {
+                        "color": {
+                            "r": 0.9,
+                            "g": 0.9,
+                            "b": 0.0
+                        }
+                    }
+                }
+            },
+            "Light 3": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": -10,
+                            "y": 5,
+                            "z": -5
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
+                        }
+                    },
+                    "light": {
+                        "color": {
+                            "r": 0.0,
+                            "g": 0.0,
+                            "b": 0.9
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
