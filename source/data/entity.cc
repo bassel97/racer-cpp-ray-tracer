@@ -2,6 +2,9 @@
 
 racer::Entity::Entity(std::string entity_name) : name_(entity_name), is_active_(false)
 {
+    Transform *transform_comp = new Transform();
+    AddComponent(transform_comp);
+    transform = transform_comp;
 }
 
 racer::Entity::~Entity()

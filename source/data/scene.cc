@@ -3,6 +3,7 @@
 racer::Scene::Scene(std::string name)
     : name_(name), environment_color_(glm::vec3(0.6666f)), active_camera_(NULL)
 {
+    environment_color_ = glm::vec3(0.85f);
 }
 
 racer::Scene::~Scene()

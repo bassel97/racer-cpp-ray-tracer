@@ -10,6 +10,7 @@ set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)           # Don't build Installation I
 set(GLFW_USE_HYBRID_HPG ON CACHE BOOL "" FORCE)     # Add variables to use High Performance Graphics Card if available
 add_subdirectory(vendor/glfw)                       # Build the GLFW project to use later as a library
 add_subdirectory(vendor/glad)                       # Add GLAD folder to be later used
+add_subdirectory(vendor/assimp/assimp)              # Add assimp folder to be later used
 
 
 # A variables with all the source files of Dear ImGui
@@ -40,6 +41,7 @@ set(SourceCode
     source/data/components/transform.cc
     source/data/components/camera.cc
     source/data/components/renderer/renderer-component.cc
+    source/data/components/renderer/model-renderer.cc
     source/data/components/renderer/sphere-renderer.cc
     source/data/components/renderer/triangle-renderer.cc
 
@@ -65,6 +67,7 @@ target_include_directories(RACER PUBLIC
 # Vendor Libraries
 target_include_directories(RACER
     PUBLIC vendor/glad/include
+    PUBLIC vendor/assimp/assimp/include
     PUBLIC vendor/imgui
     PUBLIC vendor/json
     PUBLIC vendor/glm
@@ -74,4 +77,5 @@ target_include_directories(RACER
 
 target_link_libraries(RACER
     PUBLIC glfw
-    PUBLIC glad)
+    PUBLIC glad
+    PUBLIC assimp)

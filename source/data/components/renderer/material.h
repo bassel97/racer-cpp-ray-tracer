@@ -6,8 +6,8 @@ namespace racer
     class Material 
     {
         public:
-        glm::vec3 color;
-        float Ka, Kd, Ks, Kr;
-        int n;
+        glm::vec3 color = glm::vec3(0.0);
+        float Ka = 0, Kd = 0, Ks = 0, Kr = 0;
+        int n = 50;
     };
 }

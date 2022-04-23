@@ -10,10 +10,12 @@ namespace racer
     class Transform : public Component
     {
     public:
-        Transform(glm::vec3 = glm::vec3(0.0), glm::vec3 = glm::vec3(0.0), glm::vec3 = glm::vec3(0.0));
+        Transform(glm::vec3 = glm::vec3(0.0), glm::vec3 = glm::vec3(0.0), glm::vec3 = glm::vec3(1.0));
 
         void ResetTransform();
         glm::mat4 GetRotationMatrix();
+        glm::mat4 GetTransformationMatrix();
+        glm::mat4 GetTSMatrix();
 
         virtual std::string GetName()
         {
@@ -23,6 +25,8 @@ namespace racer
         glm::vec3 position_;
         glm::vec3 rotation_;
         glm::vec3 scale_;
+
+    private:
     };
 
 } // namespace racer

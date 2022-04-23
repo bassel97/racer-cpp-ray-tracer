@@ -11,12 +11,13 @@ namespace racer
         "layout (location = 2) in vec2 aTexCoord;\n"
         "out vec2 TexCoord;\n"
         "out vec3 Normal;\n"
-        "uniform mat4 MVP;\n"
+        "uniform mat4 model;\n"
+        "uniform mat4 VP;\n"
         "void main()\n"
         "{\n"
-        "	gl_Position = MVP * vec4(aPos, 1.0f);\n"
+        "	gl_Position = VP * model * vec4(aPos, 1.0f);\n"
         "	TexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
-        "   Normal = aNormal;\n"
+        "   Normal = (model * vec4(aNormal,0.0)).xyz;\n"
         "}";
 
     const std::string kDiffuseFragmentShader =
@@ -28,6 +29,7 @@ namespace racer
         "void main()\n"
         "{\n"
         "   float diff = max( dot(-viewDir, Normal), 0.0);"
-        "	FragColor = vec4(color, 1.0) * vec4(diff, diff, diff, 1.0);\n"
+        "	//FragColor = vec4(color, 1.0) * vec4(diff, diff, diff, 1.0);\n"
+        "	FragColor = vec4(color, 1.0);\n"
         "}";
 }

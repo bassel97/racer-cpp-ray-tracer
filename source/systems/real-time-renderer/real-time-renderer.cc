@@ -51,8 +51,9 @@ void racer::RealtimeRendererSystem::RenderScene(Scene *scene)
 {
     // bind to framebuffer and draw scene as we normally would to color texture
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_);
+
     glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
-    glDepthFunc(GL_LEQUAL);
+    glDepthFunc(GL_LESS);
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);

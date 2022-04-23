@@ -17,7 +17,7 @@ namespace racer
     class Camera : public Component
     {
     public:
-        Camera(float fov_y = 60.0f, float near_plan = 1.0f, float far_plan = 0.0f)
+        Camera(float fov_y = 60.0f, float near_plan = 1.0f, float far_plan = 100.0f)
             : fov_y_(fov_y), near_plane_(near_plan), far_plane_(far_plan)
         {
         }

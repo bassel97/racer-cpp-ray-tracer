@@ -12,7 +12,8 @@ racer::Scene *racer::SceneImporter::ImportSceneWithFilePath(std::string file_pat
     }
     else
     {
-        throw "Scene file not found";
+        return new Scene("New scene");
+        //throw "Scene file not found";
     }
 }
 
@@ -28,12 +29,9 @@ racer::Scene *racer::SceneImporter::ImportScene(nlohmann::json scene_data)
         {
             if (component_data.key()._Equal("transform"))
             {
-                Transform *transform = new Transform(
-                    glm::vec3(component_data.value()["position"]["x"], component_data.value()["position"]["y"], component_data.value()["position"]["z"]),
-                    glm::vec3(component_data.value()["rotation"]["x"], component_data.value()["rotation"]["y"], component_data.value()["rotation"]["z"]),
-                    glm::vec3(component_data.value()["scale"]["x"], component_data.value()["scale"]["y"], component_data.value()["scale"]["z"]));
-                entity->AddComponent(transform);
-                entity->transform = transform;
+                entity->transform->position_ = glm::vec3(component_data.value()["position"]["x"], component_data.value()["position"]["y"], component_data.value()["position"]["z"]);
+                entity->transform->rotation_ = glm::vec3(component_data.value()["rotation"]["x"], component_data.value()["rotation"]["y"], component_data.value()["rotation"]["z"]);
+                entity->transform->scale_ = glm::vec3(component_data.value()["scale"]["x"], component_data.value()["scale"]["y"], component_data.value()["scale"]["z"]);
                 continue;
             }
 
@@ -83,6 +81,26 @@ racer::Scene *racer::SceneImporter::ImportScene(nlohmann::json scene_data)
                 triangleRendererComponent->rendering_material_.n = component_data.value()["material"]["n"];
                 entity->AddComponent(triangleRendererComponent);
                 new_scene->shapes_to_render_.push_back(triangleRendererComponent);
+                continue;
+            }
+
+            if (component_data.key()._Equal("model-renderer"))
+            {
+                ModelRendererComponent *meshRendererComponent = new ModelRendererComponent(component_data.value()["path"]);
+
+                meshRendererComponent->rendering_material_.color = glm::vec3(
+                    component_data.value()["material"]["color"]["r"],
+                    component_data.value()["material"]["color"]["g"],
+                    component_data.value()["material"]["color"]["b"]);
+
+                meshRendererComponent->rendering_material_.Ka = component_data.value()["material"]["k"]["ka"];
+                meshRendererComponent->rendering_material_.Kd = component_data.value()["material"]["k"]["kd"];
+                meshRendererComponent->rendering_material_.Kr = component_data.value()["material"]["k"]["kr"];
+                meshRendererComponent->rendering_material_.Ks = component_data.value()["material"]["k"]["ks"];
+
+                meshRendererComponent->rendering_material_.n = component_data.value()["material"]["n"];
+                entity->AddComponent(meshRendererComponent);
+                new_scene->shapes_to_render_.push_back(meshRendererComponent);
                 continue;
             }
 

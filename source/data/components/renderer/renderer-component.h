@@ -11,6 +11,7 @@
 #include <real-time-renderer/utils/shader/shader.h>
 #include <physics/ray.hpp>
 #include "material.h"
+#include <primitive-shapes/aabb-shape.h>
 
 #define SMALL_NUMBER 1.e-4f
 
@@ -22,10 +23,18 @@ namespace racer
         virtual void Rastarize(glm::mat4, const Shader &rendering_shader) = 0;
         virtual IntersectionData RayTrace(Ray ray) = 0;
 
+        void UpdateBoundingBox();
+
         Material rendering_material_;
 
     protected:
+        bool IsInBorders(Ray ray)
+        {
+            return border_shape_->RayHit(ray);
+        }
+
         PrimitiveModel *renderer_mesh_;
+        AABBPrimitiveShape *border_shape_ = NULL;
     };
 }
 

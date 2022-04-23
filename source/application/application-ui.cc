@@ -1,5 +1,6 @@
 #include "application-ui.h"
 
+#include <windows.h>
 #include <glm/gtc/type_ptr.hpp>
 
 racer::ApplicationUI::ApplicationUI(GLFWwindow *glfw_window)
@@ -159,6 +160,18 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
 {
     if (ImGui::Begin("Scene Hierarchy"))
     {
+        static char entity_name[64] = "";
+        ImGui::InputTextWithHint("Add", "Entity name", entity_name, IM_ARRAYSIZE(entity_name));
+        if (ImGui::Button("Add entity"))
+        {
+            if (!(std::string(entity_name)._Equal("")))
+            {
+                scene->AddEntity(new Entity(std::string(entity_name)));
+                entity_name[0] = '\0';
+            }
+        }
+        ImGui::Separator();
+
         if (ImGui::TreeNode(("Entities (" + scene->name_ + ")").c_str()))
         {
             for (auto entity : scene->entities_)
@@ -227,6 +240,52 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
 
                     ImGui::Separator();
                 }
+
+                if (ImGui::Button("Add sphere renderer component"))
+                {
+                    SphereRendererComponent *sphereRendererComponent = new SphereRendererComponent();
+                    entity->AddComponent(sphereRendererComponent);
+                    scene->shapes_to_render_.push_back(sphereRendererComponent);
+                }
+
+                if (ImGui::Button("Add model renderer component"))
+                {
+                    OPENFILENAME ofn;
+                    char fileName[MAX_PATH] = "";
+                    ZeroMemory(&ofn, sizeof(ofn));
+
+                    ofn.lStructSize = sizeof(OPENFILENAME);
+                    ofn.hwndOwner = NULL;
+                    ofn.lpstrFilter = "All Files (*.*)\0*.*\0";
+                    ofn.lpstrFile = fileName;
+                    ofn.nMaxFile = MAX_PATH;
+                    ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+                    ofn.lpstrDefExt = "";
+
+                    string fileNameStr;
+
+                    if (GetOpenFileName(&ofn))
+                        fileNameStr = fileName;
+
+                    ModelRendererComponent *modelRendererComponent = new ModelRendererComponent(fileNameStr);
+                    entity->AddComponent(modelRendererComponent);
+                    scene->shapes_to_render_.push_back(modelRendererComponent);
+                }
+
+                if (ImGui::Button("Add light component"))
+                {
+                    Light *lightComponent = new Light();
+                    entity->AddComponent(lightComponent);
+                    scene->ligths_.push_back(lightComponent);
+                }
+
+                if (ImGui::Button("Add camera component"))
+                {
+                    Camera *camera = new Camera();
+                    entity->AddComponent(camera);
+                    scene->active_camera_ = camera;
+                }
+
                 break;
             }
         }

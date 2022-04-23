@@ -1,5 +1,7 @@
 #include "ray-tracing-renderer.h"
 
+#include <iostream>
+
 void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned char *pixels, int width, int height)
 {
     this->scene = sceneToRender;
@@ -9,10 +11,17 @@ void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned
 
     glm::mat4 camera_rotation_matrix = scene->active_camera_->holdingEntity->transform->GetRotationMatrix();
 
+    for (size_t shapeIndex = 0; shapeIndex < scene->shapes_to_render_.size(); shapeIndex++)
+    {
+        scene->shapes_to_render_[shapeIndex]->UpdateBoundingBox();
+    }
+
     for (int i = 0; i < height; i++)
     {
         for (int k = 0; k < width; k++)
         {
+            std::cout << "progress: " << (((float)(i * height) + k) / (width * height)) * 100 << "%" << std::endl;
+
             float u = (2.0f * ((static_cast<float>(k) + 0.5f) / width) - 1.0f) * fov_correction;
             float v = (1.0f - 2.0f * ((static_cast<float>(i) + 0.5f) / height)) * (fov_correction / aspectRatio);
             float d = -1;

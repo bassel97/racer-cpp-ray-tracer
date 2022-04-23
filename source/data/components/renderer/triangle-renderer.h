@@ -3,6 +3,7 @@
 
 #include "renderer-component.h"
 #include <real-time-renderer/utils/primitive-shapes/triangle-preview-data.h>
+#include <primitive-shapes/triangle-shape.h>
 
 namespace racer
 {
@@ -21,11 +22,7 @@ namespace racer
             return "triangle renderer";
         }
 
-        glm::vec3 v1_;
-        glm::vec3 v2_;
-        glm::vec3 v3_;
-
-        glm::vec3 normal_;
+        TrianglePrimitiveShape trianglePrimitiveShape;
     };
 }
 

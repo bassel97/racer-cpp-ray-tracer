@@ -5,15 +5,22 @@
 racer::SphereRendererComponent::SphereRendererComponent()
 {
     renderer_mesh_ = new PrimitiveModel(kSphereObjDataFile);
+    border_shape_ = new AABBPrimitiveShape(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1));
 }
 
 racer::SphereRendererComponent::~SphereRendererComponent()
 {
+    delete border_shape_;
     delete renderer_mesh_;
 }
 
 racer::IntersectionData racer::SphereRendererComponent::RayTrace(Ray ray)
 {
+    if (!border_shape_->RayHit(ray))
+    {
+        return IntersectionData();
+    }
+
     ray.origin = (ray.origin - holdingEntity->transform->position_) / holdingEntity->transform->scale_;
 
     glm::vec3 scaledDirection = ray.direction / holdingEntity->transform->scale_;
@@ -52,13 +59,12 @@ racer::IntersectionData racer::SphereRendererComponent::RayTrace(Ray ray)
 void racer::SphereRendererComponent::Rastarize(glm::mat4 VP, const Shader &rendering_shader)
 {
     // calculate the model matrix for each object and pass it to shader before drawing
-    glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    model = glm::translate(model, holdingEntity->transform->position_);
-    model = glm::scale(model, holdingEntity->transform->scale_);
+    glm::mat4 model = holdingEntity->transform->GetTransformationMatrix();
 
     rendering_shader.setVec3("color", rendering_material_.color);
 
-    rendering_shader.setMat4("MVP", VP * model);
+    rendering_shader.setMat4("model", model);
+    rendering_shader.setMat4("VP", VP);
 
     renderer_mesh_->Render();
 }

@@ -9,6 +9,7 @@
 #include <components/transform.h>
 #include <components/renderer/sphere-renderer.h>
 #include <components/renderer/triangle-renderer.h>
+#include <components/renderer/model-renderer.h>
 #include <components/camera.h>
 #include <components/light.h>
 
