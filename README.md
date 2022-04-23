@@ -6,6 +6,11 @@ A ray tracing engine developed in c++, with real time preview and edit using ope
 Create for practice. 
 
 ## Development documentation:
+## 4. 3D Model loading and rendering
+
+In action preview:
+![model loading](assets/media/GUI/scene-with-render.png "model loading")
+---
 ## 3. GUI window for adjusting data
 
 In action preview:
