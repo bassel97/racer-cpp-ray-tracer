@@ -29,7 +29,6 @@ namespace racer
         "void main()\n"
         "{\n"
         "   float diff = max( dot(-viewDir, Normal), 0.0);"
-        "	//FragColor = vec4(color, 1.0) * vec4(diff, diff, diff, 1.0);\n"
-        "	FragColor = vec4(color, 1.0);\n"
+        "	FragColor = vec4(color, 1.0) * vec4(diff, diff, diff, 1.0);\n"
         "}";
 }
