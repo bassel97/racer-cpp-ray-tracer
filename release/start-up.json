@@ -1,17 +1,6 @@
 {
-    "name": "main-scene",
+    "name": "cornell-box",
     "data": {
-        "scene-properties": {
-            "screen": {
-                "width": 256,
-                "height": 256
-            },
-            "environment-color": {
-                "r": 0.5,
-                "g": 0.3,
-                "b": 1.0
-            }
-        },
         "entities": {
             "Camera": {
                 "components": {
@@ -35,211 +24,280 @@
                     "camera": {
                         "near-plane": 1,
                         "far-plane": 1000,
-                        "fov-y": 90
+                        "fov-y": 40
                     }
                 }
             },
-            "Monkey": {
+            "light": {
                 "components": {
                     "transform": {
                         "position": {
                             "x": 0,
                             "y": 0,
-                            "z": -10
+                            "z": -2.4
                         },
                         "rotation": {
-                            "x": -2,
-                            "y": 0.5,
+                            "x": 0,
+                            "y": 0,
                             "z": 0
                         },
                         "scale": {
-                            "x": 3,
-                            "y": 3,
-                            "z": 3
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
+                        }
+                    },
+                    "light": {
+                        "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1
+                        }
+                    }
+                }
+            },
+            "plane-1": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": -4.88
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 2,
+                            "y": 2,
+                            "z": 1
                         }
                     },
                     "model-renderer": {
-                        "path": "monkey.fbx",
+                        "path": "unit-plane.fbx",
                         "material": {
                             "color": {
-                                "r": 0.15,
-                                "g": 0.15,
-                                "b": 0.85
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
                             },
-                            "k": {
-                                "ka": 1,
-                                "kd": 1,
-                                "ks": 0,
-                                "kr": 1
+                            "emission-color": {
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
                             },
-                            "n": 50
+                            "ambient": 0,
+                            "diffuse": 1,
+                            "specular": 0,
+                            "reflectance": 0.5,
+                            "emission": 0.0
                         }
                     }
                 }
             },
-            "Sphere 2": {
+            "plane-2": {
                 "components": {
                     "transform": {
                         "position": {
-                            "x": 4,
-                            "y": 4,
-                            "z": -10
+                            "x": 1,
+                            "y": 0,
+                            "z": -3.88
                         },
                         "rotation": {
                             "x": 0,
-                            "y": 0,
+                            "y": -1.57079633,
                             "z": 0
                         },
                         "scale": {
-                            "x": 1,
+                            "x": 2,
                             "y": 2,
                             "z": 1
                         }
                     },
-                    "triangle-renderer": {
+                    "model-renderer": {
+                        "path": "unit-plane.fbx",
                         "material": {
                             "color": {
-                                "r": 0.0,
-                                "g": 1.0,
-                                "b": 0.0
+                                "r": 0.65,
+                                "g": 0.05,
+                                "b": 0.05
                             },
-                            "k": {
-                                "ka": 1,
-                                "kd": 1,
-                                "ks": 0.9,
-                                "kr": 0
+                            "emission-color": {
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
                             },
-                            "n": 50
+                            "ambient": 0,
+                            "diffuse": 1,
+                            "specular": 0,
+                            "reflectance": 0.5,
+                            "emission": 0.0
                         }
                     }
                 }
             },
-            "Sphere 3": {
+            "plane-3": {
                 "components": {
                     "transform": {
                         "position": {
-                            "x": -4,
-                            "y": 2,
-                            "z": -10
+                            "x": -1,
+                            "y": 0,
+                            "z": -3.88
                         },
                         "rotation": {
                             "x": 0,
-                            "y": 0,
+                            "y": 1.57079633,
                             "z": 0
                         },
                         "scale": {
-                            "x": 1,
+                            "x": 2,
                             "y": 2,
                             "z": 1
                         }
                     },
-                    "sphere-renderer": {
+                    "model-renderer": {
+                        "path": "unit-plane.fbx",
                         "material": {
                             "color": {
-                                "r": 0.0,
-                                "g": 0.0,
-                                "b": 0.5
+                                "r": 0.12,
+                                "g": 0.45,
+                                "b": 0.15
                             },
-                            "k": {
-                                "ka": 1,
-                                "kd": 1,
-                                "ks": 0.9,
-                                "kr": 0
+                            "emission-color": {
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
                             },
-                            "n": 50
+                            "ambient": 0,
+                            "diffuse": 1,
+                            "specular": 0,
+                            "reflectance": 0.5,
+                            "emission": 0.0
                         }
                     }
                 }
             },
-            "Sphere 4": {
+            "plane-4": {
                 "components": {
                     "transform": {
                         "position": {
-                            "x": -6,
-                            "y": 2,
-                            "z": -10
+                            "x": 0,
+                            "y": -1,
+                            "z": -3.88
                         },
                         "rotation": {
-                            "x": 0,
+                            "x": -1.57079633,
                             "y": 0,
                             "z": 0
                         },
                         "scale": {
-                            "x": 1,
+                            "x": 2,
                             "y": 2,
                             "z": 1
                         }
                     },
-                    "sphere-renderer": {
+                    "model-renderer": {
+                        "path": "unit-plane.fbx",
                         "material": {
                             "color": {
-                                "r": 0.25,
-                                "g": 0.0,
-                                "b": 0.25
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
                             },
-                            "k": {
-                                "ka": 1,
-                                "kd": 1,
-                                "ks": 0.9,
-                                "kr": 0
+                            "emission-color": {
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
                             },
-                            "n": 50
+                            "ambient": 0,
+                            "diffuse": 1,
+                            "specular": 0,
+                            "reflectance": 0.5,
+                            "emission": 0.0
                         }
                     }
                 }
             },
-            "Light 2": {
+            "plane-5": {
                 "components": {
                     "transform": {
                         "position": {
-                            "x": 10,
-                            "y": 10,
-                            "z": -10
-                        },
-                        "rotation": {
                             "x": 0,
-                            "y": 0,
-                            "z": 0
-                        },
-                        "scale": {
-                            "x": 1,
                             "y": 1,
-                            "z": 1
-                        }
-                    },
-                    "light": {
-                        "color": {
-                            "r": 0.9,
-                            "g": 0.9,
-                            "b": 0.0
-                        }
-                    }
-                }
-            },
-            "Light 3": {
-                "components": {
-                    "transform": {
-                        "position": {
-                            "x": -10,
-                            "y": 5,
-                            "z": -5
+                            "z": -3.88
                         },
                         "rotation": {
-                            "x": 0,
+                            "x": 1.57079633,
                             "y": 0,
                             "z": 0
                         },
                         "scale": {
-                            "x": 1,
-                            "y": 1,
+                            "x": 2,
+                            "y": 2,
                             "z": 1
                         }
                     },
-                    "light": {
-                        "color": {
-                            "r": 0.0,
-                            "g": 0.0,
-                            "b": 0.9
+                    "model-renderer": {
+                        "path": "unit-plane.fbx",
+                        "material": {
+                            "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1
+                            },
+                            "emission-color": {
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
+                            },
+                            "ambient": 0,
+                            "diffuse": 1,
+                            "specular": 0,
+                            "reflectance": 0.5,
+                            "emission": 0.0
+                        }
+                    }
+                }
+            },
+            "plane-light": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": 0,
+                            "y": 0.99,
+                            "z": -3.88
+                        },
+                        "rotation": {
+                            "x": 1.57079633,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.47,
+                            "y": 0.38,
+                            "z": 1
+                        }
+                    },
+                    "model-renderer": {
+                        "path": "unit-plane.fbx",
+                        "material": {
+                            "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1
+                            },
+                            "emission-color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1
+                            },
+                            "ambient": 0,
+                            "diffuse": 1,
+                            "specular": 0,
+                            "reflectance": 0.5,
+                            "emission": 15.0
                         }
                     }
                 }

@@ -1,6 +1,32 @@
 #include "ray-tracing-renderer.h"
 
+#include <cstdlib>
 #include <iostream>
+#include <glm/gtc/random.hpp>
+#include <random>
+
+inline double random_double()
+{
+    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    static std::mt19937 generator;
+    return distribution(generator);
+}
+
+glm::vec3 random_in_unit_sphere()
+{
+    while (true)
+    {
+        auto p = glm::vec3(random_double(), random_double(), random_double());
+        if (p.length() >= 1)
+            continue;
+        return p;
+    }
+}
+
+glm::vec3 random_unit_vector()
+{
+    return glm::normalize(random_in_unit_sphere());
+}
 
 void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned char *pixels, int width, int height)
 {
@@ -20,19 +46,32 @@ void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned
     {
         for (int k = 0; k < width; k++)
         {
-            std::cout << "progress: " << (((float)(i * height) + k) / (width * height)) * 100 << "%" << std::endl;
+            // std::cout << "progress: " << (((float)(i * height) + k) / (width * height)) * 100 << "%" << std::endl;
 
-            float u = (2.0f * ((static_cast<float>(k) + 0.5f) / width) - 1.0f) * fov_correction;
-            float v = (1.0f - 2.0f * ((static_cast<float>(i) + 0.5f) / height)) * (fov_correction / aspectRatio);
-            float d = -1;
+            int samples_per_pixel = 1000;
+            float scale = 1.0f / static_cast<float>(samples_per_pixel);
 
-            glm::vec3 direction = {u, v, d};
+            glm::vec3 pixelColor = glm::vec3(0.0);
+            for (int s = 0; s < samples_per_pixel; ++s)
+            {
+                float u = (2.0f * ((static_cast<float>(k + rand() / (RAND_MAX + 1.0)) + 0.5f) / width) - 1.0f) * fov_correction;
+                float v = (1.0f - 2.0f * ((static_cast<float>(i + rand() / (RAND_MAX + 1.0)) + 0.5f) / height)) * (fov_correction / aspectRatio);
+                float d = -1;
 
-            glm::vec4 direction_rotated = camera_rotation_matrix * glm::vec4(direction, 1.0f);
-            direction = glm::vec3(direction_rotated);
+                glm::vec3 direction = {u, v, d};
 
-            glm::vec3 cameraOrigin = scene->active_camera_->holdingEntity->transform->position_;
-            glm::vec3 pixelColor = GetPixelColor(cameraOrigin, direction, 0);
+                glm::vec4 direction_rotated = camera_rotation_matrix * glm::vec4(direction, 1.0f);
+                direction = glm::vec3(direction_rotated);
+
+                glm::vec3 cameraOrigin = scene->active_camera_->holdingEntity->transform->position_;
+                pixelColor += GetPixelColor(cameraOrigin, direction, 0);
+            }
+
+            pixelColor = glm::sqrt(pixelColor * scale);
+
+            pixelColor.r = std::min(1.0f, std::max(0.0f, pixelColor.r));
+            pixelColor.g = std::min(1.0f, std::max(0.0f, pixelColor.g));
+            pixelColor.b = std::min(1.0f, std::max(0.0f, pixelColor.b));
 
             pixels[i * width * 3 + k * 3] = (char)(pixelColor.r * 255);
             pixels[i * width * 3 + k * 3 + 1] = (char)(pixelColor.g * 255);
@@ -43,14 +82,10 @@ void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned
 
 glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLevel)
 {
-    if (recursionLevel >= 3)
-        return {0, 0, 0};
+    if (recursionLevel >= 50)
+        return scene->environment_color_;
 
     glm::vec3 pixelColor = {0, 0, 0};
-    if (recursionLevel == 0)
-    {
-        pixelColor = scene->environment_color_;
-    }
 
     double tmin = 10000000;
     bool intersected = false;
@@ -77,9 +112,11 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
 
     if (intersected)
     {
-        pixelColor = nearShape->rendering_material_.Ka * scene->environment_color_ * nearShape->rendering_material_.color;
+        // pixelColor = nearShape->rendering_material_.Ka * scene->environment_color_ * nearShape->rendering_material_.color;
+        // pixelColor = nearShape->rendering_material_.color;
+        // pixelColor += nearShape->rendering_material_.emission * nearShape->rendering_material_.emission_color;
 
-        for (size_t lightIndex = 0; lightIndex < scene->ligths_.size(); lightIndex++)
+        /*for (size_t lightIndex = 0; lightIndex < scene->ligths_.size(); lightIndex++)
         {
             glm::vec3 L = glm::normalize(scene->ligths_[lightIndex]->holdingEntity->transform->position_ - nearIntersectedSphereData.pointOfIntersection);
 
@@ -112,18 +149,24 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
             double RdotV = std::max(0.0f, (r.x * view.x + r.y * view.y + r.z * view.z));
 
             pixelColor += scene->ligths_[lightIndex]->color_ * nearShape->rendering_material_.Ks * (float)std::pow(RdotV, nearShape->rendering_material_.n);
-        }
+        }*/
 
         glm::vec3 view = glm::normalize(origin - nearIntersectedSphereData.pointOfIntersection);
-        glm::vec3 reflectedRay = -view - 2.0f * nearIntersectedSphereData.normalToIntersection * glm::dot(-view, nearIntersectedSphereData.normalToIntersection);
-        glm::vec3 reflectedCalculatedRayColor = GetPixelColor(nearIntersectedSphereData.pointOfIntersection, reflectedRay, recursionLevel + 1);
+        // glm::vec3 reflectedRay = -view - 2.0f * nearIntersectedSphereData.normalToIntersection * glm::dot(-view, nearIntersectedSphereData.normalToIntersection);
 
-        pixelColor += nearShape->rendering_material_.Kr * reflectedCalculatedRayColor;
+        /*glm::vec3 reflectedRay = -glm::reflect(view, nearIntersectedSphereData.normalToIntersection);
+
+        reflectedRay += glm::normalize(glm::sphericalRand(1.0f));*/
+
+        glm::vec3 reflectedCalculatedRayColor = GetPixelColor(nearIntersectedSphereData.pointOfIntersection,
+                                                              glm::normalize(glm::normalize(nearIntersectedSphereData.normalToIntersection) + glm::normalize(glm::sphericalRand(0.5f))), recursionLevel + 1);
+
+        pixelColor = nearShape->rendering_material_.emission + nearShape->rendering_material_.color * reflectedCalculatedRayColor;
     }
-
-    pixelColor.r = std::min(1.0f, std::max(0.0f, pixelColor.r));
-    pixelColor.g = std::min(1.0f, std::max(0.0f, pixelColor.g));
-    pixelColor.b = std::min(1.0f, std::max(0.0f, pixelColor.b));
+    else
+    {
+        pixelColor = scene->environment_color_;
+    }
 
     return pixelColor;
 }

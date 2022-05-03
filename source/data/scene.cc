@@ -1,9 +1,8 @@
 #include "scene.h"
 
 racer::Scene::Scene(std::string name)
-    : name_(name), environment_color_(glm::vec3(0.6666f)), active_camera_(NULL)
+    : name_(name), environment_color_(glm::vec3(0.0f)), active_camera_(NULL)
 {
-    environment_color_ = glm::vec3(0.85f);
 }
 
 racer::Scene::~Scene()

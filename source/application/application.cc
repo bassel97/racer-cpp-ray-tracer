@@ -13,28 +13,13 @@ racer::Application::~Application()
 
 int racer::Application::Run()
 {
-    /*std::ifstream startupFile("start-up.json");
-    if (!startupFile.fail())
-    {
-        nlohmann::json jsonData;
-        startupFile >> jsonData;
-
-        active_scene = new Scene(jsonData["name"], jsonData["data"]);
-    }
-    else
-    {*/
-    // active_scene_ = new Scene("Empty Scene");
     active_scene_ = SceneImporter::ImportSceneWithFilePath("start-up.json");
-    //}
 
     RenderProperties render_properties;
 
     unsigned int texture = 0;
-    // texture 1
-    // ---------
+
     glGenTextures(1, &texture);
-    /*glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);*/
 
     while (!window_.IsWindowClosed())
     {

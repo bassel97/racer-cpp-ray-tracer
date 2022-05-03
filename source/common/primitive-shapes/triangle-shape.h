@@ -44,9 +44,9 @@ namespace racer
             glm::vec3 C1 = p_hit - v2;
             glm::vec3 C2 = p_hit - v3;
 
-            if (glm::dot(normal, glm::cross(edge0, C0)) > 0 &&
-                glm::dot(normal, glm::cross(edge1, C1)) > 0 &&
-                glm::dot(normal, glm::cross(edge2, C2)) > 0)
+            if (glm::dot(normal, glm::cross(edge0, C0)) > -0.001f &&
+                glm::dot(normal, glm::cross(edge1, C1)) > -0.001f &&
+                glm::dot(normal, glm::cross(edge2, C2)) > -0.001f)
             {
                 return IntersectionData(true, p_hit, normal, t);
             }

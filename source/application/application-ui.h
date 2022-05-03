@@ -14,7 +14,7 @@ namespace racer
 
     struct RenderProperties
     {
-        int width = 1024, height = 720;
+        int width = 400, height = 400;
     };
 
     class ApplicationUI

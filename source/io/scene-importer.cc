@@ -13,7 +13,6 @@ racer::Scene *racer::SceneImporter::ImportSceneWithFilePath(std::string file_pat
     else
     {
         return new Scene("New scene");
-        //throw "Scene file not found";
     }
 }
 
@@ -53,12 +52,17 @@ racer::Scene *racer::SceneImporter::ImportScene(nlohmann::json scene_data)
                     component_data.value()["material"]["color"]["g"],
                     component_data.value()["material"]["color"]["b"]);
 
-                sphereRendererComponent->rendering_material_.Ka = component_data.value()["material"]["k"]["ka"];
-                sphereRendererComponent->rendering_material_.Kd = component_data.value()["material"]["k"]["kd"];
-                sphereRendererComponent->rendering_material_.Kr = component_data.value()["material"]["k"]["kr"];
-                sphereRendererComponent->rendering_material_.Ks = component_data.value()["material"]["k"]["ks"];
+                sphereRendererComponent->rendering_material_.emission_color = glm::vec3(
+                    component_data.value()["material"]["emission-color"]["r"],
+                    component_data.value()["material"]["emission-color"]["g"],
+                    component_data.value()["material"]["emission-color"]["b"]);
 
-                sphereRendererComponent->rendering_material_.n = component_data.value()["material"]["n"];
+                sphereRendererComponent->rendering_material_.ambient = component_data.value()["material"]["ambient"];
+                sphereRendererComponent->rendering_material_.diffuse = component_data.value()["material"]["diffuse"];
+                sphereRendererComponent->rendering_material_.reflectance = component_data.value()["material"]["reflectance"];
+                sphereRendererComponent->rendering_material_.specular = component_data.value()["material"]["specular"];
+                sphereRendererComponent->rendering_material_.emission = component_data.value()["material"]["emission"];
+
                 entity->AddComponent(sphereRendererComponent);
                 new_scene->shapes_to_render_.push_back(sphereRendererComponent);
                 continue;
@@ -73,12 +77,17 @@ racer::Scene *racer::SceneImporter::ImportScene(nlohmann::json scene_data)
                     component_data.value()["material"]["color"]["g"],
                     component_data.value()["material"]["color"]["b"]);
 
-                triangleRendererComponent->rendering_material_.Ka = component_data.value()["material"]["k"]["ka"];
-                triangleRendererComponent->rendering_material_.Kd = component_data.value()["material"]["k"]["kd"];
-                triangleRendererComponent->rendering_material_.Kr = component_data.value()["material"]["k"]["kr"];
-                triangleRendererComponent->rendering_material_.Ks = component_data.value()["material"]["k"]["ks"];
+                triangleRendererComponent->rendering_material_.emission_color = glm::vec3(
+                    component_data.value()["material"]["emission-color"]["r"],
+                    component_data.value()["material"]["emission-color"]["g"],
+                    component_data.value()["material"]["emission-color"]["b"]);
 
-                triangleRendererComponent->rendering_material_.n = component_data.value()["material"]["n"];
+                triangleRendererComponent->rendering_material_.ambient = component_data.value()["material"]["ambient"];
+                triangleRendererComponent->rendering_material_.diffuse = component_data.value()["material"]["diffuse"];
+                triangleRendererComponent->rendering_material_.reflectance = component_data.value()["material"]["reflectance"];
+                triangleRendererComponent->rendering_material_.specular = component_data.value()["material"]["specular"];
+                triangleRendererComponent->rendering_material_.emission = component_data.value()["material"]["emission"];
+
                 entity->AddComponent(triangleRendererComponent);
                 new_scene->shapes_to_render_.push_back(triangleRendererComponent);
                 continue;
@@ -93,12 +102,17 @@ racer::Scene *racer::SceneImporter::ImportScene(nlohmann::json scene_data)
                     component_data.value()["material"]["color"]["g"],
                     component_data.value()["material"]["color"]["b"]);
 
-                meshRendererComponent->rendering_material_.Ka = component_data.value()["material"]["k"]["ka"];
-                meshRendererComponent->rendering_material_.Kd = component_data.value()["material"]["k"]["kd"];
-                meshRendererComponent->rendering_material_.Kr = component_data.value()["material"]["k"]["kr"];
-                meshRendererComponent->rendering_material_.Ks = component_data.value()["material"]["k"]["ks"];
+                meshRendererComponent->rendering_material_.emission_color = glm::vec3(
+                    component_data.value()["material"]["emission-color"]["r"],
+                    component_data.value()["material"]["emission-color"]["g"],
+                    component_data.value()["material"]["emission-color"]["b"]);
 
-                meshRendererComponent->rendering_material_.n = component_data.value()["material"]["n"];
+                meshRendererComponent->rendering_material_.ambient = component_data.value()["material"]["ambient"];
+                meshRendererComponent->rendering_material_.diffuse = component_data.value()["material"]["diffuse"];
+                meshRendererComponent->rendering_material_.reflectance = component_data.value()["material"]["reflectance"];
+                meshRendererComponent->rendering_material_.specular = component_data.value()["material"]["specular"];
+                meshRendererComponent->rendering_material_.emission = component_data.value()["material"]["emission"];
+
                 entity->AddComponent(meshRendererComponent);
                 new_scene->shapes_to_render_.push_back(meshRendererComponent);
                 continue;

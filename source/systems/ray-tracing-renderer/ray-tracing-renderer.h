@@ -18,8 +18,11 @@ namespace racer
         unsigned int render_result_id_;
 
     private:
-        Scene *scene;
         glm::vec3 GetPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLevel);
+
+        Scene *scene;
+        bool is_rendering_ = false;
+        int rendering_index_x = 0, rendering_index_y = 0;
     };
 }
 

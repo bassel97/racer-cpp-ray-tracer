@@ -231,11 +231,13 @@ void racer::ApplicationUI::RenderSceneComponentHirerchy(Scene *scene)
                     if (rendererComponentComponent)
                     {
                         ImGui::ColorEdit3("Color", glm::value_ptr(rendererComponentComponent->rendering_material_.color));
+                        ImGui::ColorEdit3("Emission color", glm::value_ptr(rendererComponentComponent->rendering_material_.emission_color));
 
-                        ImGui::DragFloat("Ka", &rendererComponentComponent->rendering_material_.Ka, 0.01f);
-                        ImGui::DragFloat("Kd", &rendererComponentComponent->rendering_material_.Kd, 0.01f);
-                        ImGui::DragFloat("Kr", &rendererComponentComponent->rendering_material_.Kr, 0.01f);
-                        ImGui::DragFloat("Ks", &rendererComponentComponent->rendering_material_.Ks, 0.01f);
+                        ImGui::DragFloat("Ambient", &rendererComponentComponent->rendering_material_.ambient, 0.01f);
+                        ImGui::DragFloat("Diffuse", &rendererComponentComponent->rendering_material_.diffuse, 0.01f);
+                        ImGui::DragFloat("Reflectance", &rendererComponentComponent->rendering_material_.reflectance, 0.01f);
+                        ImGui::DragFloat("Specular", &rendererComponentComponent->rendering_material_.specular, 0.01f);
+                        ImGui::DragFloat("Emission", &rendererComponentComponent->rendering_material_.emission, 0.01f, 0, 1000);
                     }
 
                     ImGui::Separator();
