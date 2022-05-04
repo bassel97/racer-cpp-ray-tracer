@@ -28,62 +28,91 @@ glm::vec3 random_unit_vector()
     return glm::normalize(random_in_unit_sphere());
 }
 
-void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned char *pixels, int width, int height)
+void racer::RayTracingRendererSystem::RenderScene(Scene *sceneToRender, unsigned char *pixels_array, int width, int height)
 {
-    this->scene = sceneToRender;
+    scene_ = sceneToRender;
+    aspectRatio_ = (float)width / height;
+    fov_correction_ = static_cast<float>(tan(scene_->active_camera_->GetTanFOV() / 2.0f));
 
-    float aspectRatio = (float)width / height;
-    float fov_correction = static_cast<float>(tan(scene->active_camera_->GetTanFOV() / 2.0f));
+    width_ = width;
+    height_ = height;
 
-    glm::mat4 camera_rotation_matrix = scene->active_camera_->holdingEntity->transform->GetRotationMatrix();
+    pixels_array_ = pixels_array;
 
-    for (size_t shapeIndex = 0; shapeIndex < scene->shapes_to_render_.size(); shapeIndex++)
+    for (size_t shapeIndex = 0; shapeIndex < scene_->shapes_to_render_.size(); shapeIndex++)
     {
-        scene->shapes_to_render_[shapeIndex]->UpdateBoundingBox();
+        scene_->shapes_to_render_[shapeIndex]->UpdateBoundingBox();
     }
 
-    for (int i = 0; i < height; i++)
+    rendering_index_x_ = 0;
+    rendering_index_y_ = 0;
+
+    is_rendering_ = true;
+}
+
+void racer::RayTracingRendererSystem::UpdateRender()
+{
+    if (!is_rendering_)
+        return;
+
+    glm::mat4 camera_rotation_matrix = scene_->active_camera_->holdingEntity->transform->GetRotationMatrix();
+
+    int samples_per_pixel = 1500;
+    float scale = 1.0f / static_cast<float>(samples_per_pixel);
+
+    glm::vec3 pixelColor = glm::vec3(0.0);
+    for (int s = 0; s < samples_per_pixel; ++s)
     {
-        for (int k = 0; k < width; k++)
+        float u = (2.0f * ((static_cast<float>(rendering_index_x_ + rand() / (RAND_MAX + 1.0)) + 0.5f) / width_) - 1.0f) * fov_correction_;
+        float v = (1.0f - 2.0f * ((static_cast<float>(rendering_index_y_ + rand() / (RAND_MAX + 1.0)) + 0.5f) / height_)) * (fov_correction_ / aspectRatio_);
+        float d = -1;
+
+        glm::vec3 direction = {u, v, d};
+
+        glm::vec4 direction_rotated = camera_rotation_matrix * glm::vec4(direction, 1.0f);
+        direction = glm::vec3(direction_rotated);
+
+        glm::vec3 cameraOrigin = scene_->active_camera_->holdingEntity->transform->position_;
+        pixelColor += GetPixelColor(cameraOrigin, direction, 0);
+    }
+
+    pixelColor = glm::sqrt(pixelColor * scale);
+
+    pixelColor.r = std::min(1.0f, std::max(0.0f, pixelColor.r));
+    pixelColor.g = std::min(1.0f, std::max(0.0f, pixelColor.g));
+    pixelColor.b = std::min(1.0f, std::max(0.0f, pixelColor.b));
+
+    pixels_array_[rendering_index_y_ * width_ * 3 + rendering_index_x_ * 3] = (char)(pixelColor.r * 255);
+    pixels_array_[rendering_index_y_ * width_ * 3 + rendering_index_x_ * 3 + 1] = (char)(pixelColor.g * 255);
+    pixels_array_[rendering_index_y_ * width_ * 3 + rendering_index_x_ * 3 + 2] = (char)(pixelColor.b * 255);
+
+    rendering_index_x_++;
+    if (rendering_index_x_ >= width_)
+    {
+        rendering_index_x_ = 0;
+
+        rendering_index_y_++;
+        if (rendering_index_y_ >= height_)
         {
-            // std::cout << "progress: " << (((float)(i * height) + k) / (width * height)) * 100 << "%" << std::endl;
+            rendering_index_y_ = 0;
 
-            int samples_per_pixel = 1000;
-            float scale = 1.0f / static_cast<float>(samples_per_pixel);
-
-            glm::vec3 pixelColor = glm::vec3(0.0);
-            for (int s = 0; s < samples_per_pixel; ++s)
-            {
-                float u = (2.0f * ((static_cast<float>(k + rand() / (RAND_MAX + 1.0)) + 0.5f) / width) - 1.0f) * fov_correction;
-                float v = (1.0f - 2.0f * ((static_cast<float>(i + rand() / (RAND_MAX + 1.0)) + 0.5f) / height)) * (fov_correction / aspectRatio);
-                float d = -1;
-
-                glm::vec3 direction = {u, v, d};
-
-                glm::vec4 direction_rotated = camera_rotation_matrix * glm::vec4(direction, 1.0f);
-                direction = glm::vec3(direction_rotated);
-
-                glm::vec3 cameraOrigin = scene->active_camera_->holdingEntity->transform->position_;
-                pixelColor += GetPixelColor(cameraOrigin, direction, 0);
-            }
-
-            pixelColor = glm::sqrt(pixelColor * scale);
-
-            pixelColor.r = std::min(1.0f, std::max(0.0f, pixelColor.r));
-            pixelColor.g = std::min(1.0f, std::max(0.0f, pixelColor.g));
-            pixelColor.b = std::min(1.0f, std::max(0.0f, pixelColor.b));
-
-            pixels[i * width * 3 + k * 3] = (char)(pixelColor.r * 255);
-            pixels[i * width * 3 + k * 3 + 1] = (char)(pixelColor.g * 255);
-            pixels[i * width * 3 + k * 3 + 2] = (char)(pixelColor.b * 255);
+            is_rendering_ = false;
         }
     }
 }
 
+void racer::RayTracingRendererSystem::UpdateCurrentRenderingProperties(int &current_index_x, int &current_index_y, float &current_percentage)
+{
+    current_index_x = rendering_index_x_;
+    current_index_y = rendering_index_y_;
+
+    current_percentage = (static_cast<float>(rendering_index_y_ * width_ + rendering_index_x_) / static_cast<float>(width_ * height_)) * 100.0f;
+}
+
 glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLevel)
 {
-    if (recursionLevel >= 50)
-        return scene->environment_color_;
+    if (recursionLevel >= 20)
+        return scene_->environment_color_;
 
     glm::vec3 pixelColor = {0, 0, 0};
 
@@ -92,9 +121,9 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
     IntersectionData nearIntersectedSphereData;
     RendererComponent *nearShape;
 
-    for (size_t shapeIndex = 0; shapeIndex < scene->shapes_to_render_.size(); shapeIndex++)
+    for (size_t shapeIndex = 0; shapeIndex < scene_->shapes_to_render_.size(); shapeIndex++)
     {
-        racer::IntersectionData intersectionData = scene->shapes_to_render_[shapeIndex]->RayTrace(racer::Ray(origin, direction));
+        racer::IntersectionData intersectionData = scene_->shapes_to_render_[shapeIndex]->RayTrace(racer::Ray(origin, direction));
 
         if (intersectionData.intersected)
         {
@@ -105,7 +134,7 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
 
                 nearIntersectedSphereData = intersectionData;
 
-                nearShape = scene->shapes_to_render_[shapeIndex];
+                nearShape = scene_->shapes_to_render_[shapeIndex];
             }
         }
     }
@@ -165,7 +194,7 @@ glm::vec3 racer::RayTracingRendererSystem::GetPixelColor(glm::vec3 origin, glm::
     }
     else
     {
-        pixelColor = scene->environment_color_;
+        pixelColor = scene_->environment_color_;
     }
 
     return pixelColor;

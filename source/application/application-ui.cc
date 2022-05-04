@@ -148,6 +148,12 @@ void racer::ApplicationUI::RenderRenderOptionsWindow()
     if (ImGui::Begin("Render Options"))
     {
         ImGuiIO &io = ImGui::GetIO();
+        
+        ImGui::Text("Percentage : %.2f%%", render_properties_.percentage);
+        ImGui::Text("Current pixel : (%d,%d)", render_properties_.current_x, render_properties_.current_y);
+
+        ImGui::Separator();
+
         ImGui::InputInt("width", &render_properties_.width);
         ImGui::InputInt("height", &render_properties_.height);
         if (ImGui::SmallButton("Render"))
@@ -310,6 +316,10 @@ bool racer::ApplicationUI::IsWindowClosed() const
 
 bool racer::ApplicationUI::RayTraceRender(RenderProperties &render_properties)
 {
+    render_properties_.current_x = render_properties.current_x;
+    render_properties_.current_y = render_properties.current_y;
+    render_properties_.percentage = render_properties.percentage;
+
     render_properties = render_properties_;
     return start_render_;
 }

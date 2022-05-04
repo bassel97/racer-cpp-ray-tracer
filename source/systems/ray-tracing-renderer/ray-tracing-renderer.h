@@ -14,15 +14,23 @@ namespace racer
     {
     public:
         void RenderScene(Scene *sceneToRender, unsigned char *pixels, int width, int height);
+        void UpdateRender();
+        void UpdateCurrentRenderingProperties(int &, int &, float &);
 
         unsigned int render_result_id_;
 
     private:
         glm::vec3 GetPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLevel);
 
-        Scene *scene;
+        Scene *scene_;
+        float aspectRatio_;
+        float fov_correction_;
+        int width_, height_;
+
+        unsigned char *pixels_array_;
+
         bool is_rendering_ = false;
-        int rendering_index_x = 0, rendering_index_y = 0;
+        int rendering_index_x_ = 0, rendering_index_y_ = 0;
     };
 }
 

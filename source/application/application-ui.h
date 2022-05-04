@@ -15,6 +15,9 @@ namespace racer
     struct RenderProperties
     {
         int width = 400, height = 400;
+
+        int current_x, current_y;
+        float percentage;
     };
 
     class ApplicationUI
@@ -33,11 +36,11 @@ namespace racer
         void RenderPreviewWindow(ImTextureID);
         void RenderRenderResultWindow(ImTextureID);
         void RenderRenderOptionsWindow();
-        void RenderSceneComponentHirerchy(Scene*);
+        void RenderSceneComponentHirerchy(Scene *);
 
         bool IsWindowClosed() const;
 
-        bool RayTraceRender(RenderProperties&);
+        bool RayTraceRender(RenderProperties &);
         void FinishedRayTracing();
 
     protected:
@@ -46,7 +49,7 @@ namespace racer
 
     private:
         int preview_window_width_, preview_window_height_;
-        
+
         bool start_render_ = false;
         RenderProperties render_properties_;
     };

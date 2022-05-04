@@ -15,6 +15,7 @@ racer::Window::Window()
         throw "Failed to Create Window";
 
     glfwMakeContextCurrent(window_);
+    glfwSwapInterval(0);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         throw "Failed to initialize GLAD";
