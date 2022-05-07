@@ -301,6 +301,88 @@
                         }
                     }
                 }
+            },
+            "cube-1": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": 0.467,
+                            "y": -0.7,
+                            "z": -3.73
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": -0.314,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.297,
+                            "y": 0.297,
+                            "z": 0.297
+                        }
+                    },
+                    "model-renderer": {
+                        "path": "cube.fbx",
+                        "material": {
+                            "color": {
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
+                            },
+                            "emission-color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1
+                            },
+                            "ambient": 0,
+                            "diffuse": 1,
+                            "specular": 0,
+                            "reflectance": 0.5,
+                            "emission": 0.0
+                        }
+                    }
+                }
+            },
+            "cube-2": {
+                "components": {
+                    "transform": {
+                        "position": {
+                            "x": -0.27,
+                            "y": -0.4,
+                            "z": -4.01
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0.262,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.297,
+                            "y": 0.564,
+                            "z": 0.297
+                        }
+                    },
+                    "model-renderer": {
+                        "path": "cube.fbx",
+                        "material": {
+                            "color": {
+                                "r": 0.73,
+                                "g": 0.73,
+                                "b": 0.73
+                            },
+                            "emission-color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1
+                            },
+                            "ambient": 0,
+                            "diffuse": 1,
+                            "specular": 0,
+                            "reflectance": 0.5,
+                            "emission": 0.0
+                        }
+                    }
+                }
             }
         }
     }

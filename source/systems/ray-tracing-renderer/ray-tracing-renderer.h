@@ -21,6 +21,7 @@ namespace racer
 
     private:
         glm::vec3 GetPixelColor(glm::vec3 origin, glm::vec3 direction, int recursionLevel);
+        void RenderNextPixel(int, int);
 
         Scene *scene_;
         float aspectRatio_;

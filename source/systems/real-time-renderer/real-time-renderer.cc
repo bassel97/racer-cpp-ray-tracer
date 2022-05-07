@@ -66,7 +66,9 @@ void racer::RealtimeRendererSystem::RenderScene(Scene *scene)
     glm::mat4 projection = scene->active_camera_->GetProjectionMatrix(render_frame_width_, render_frame_height_);
 
     // camera/view transformation
+    scene->active_camera_->holdingEntity->transform->position_.z += 5;
     glm::mat4 view = scene->active_camera_->GetViewMatrix();
+    scene->active_camera_->holdingEntity->transform->position_.z -= 5;
 
     for (int i = 0; i < scene->shapes_to_render_.size(); i++)
     {
