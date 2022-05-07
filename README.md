@@ -6,6 +6,12 @@ A ray tracing engine developed in c++, with real time preview and edit using ope
 Create for practice. 
 
 ## Development documentation:
+## 5. Emissive objects instead of point lights
+
+In action preview:
+![cornell box](release/results.png "cornell box")
+---
+
 ## 4. 3D Model loading and rendering
 
 In action preview:
